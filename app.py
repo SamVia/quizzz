@@ -19,7 +19,7 @@ def crea_csv_esempio_se_mancano():
             'opzioneB': ['2', 'Blu'],
             'opzioneC': ['3', 'Giallo'],
             'opzioneD': ['4', 'Viola'],
-            'soluzione': ['2', 'Blu'],
+            'soluzione': ['B', 'B'], # Esempio con lettere
             'motivazione': ['Matematica base.', 'Rayleigh scattering.']
         }
         pd.DataFrame(data_demo).to_csv('Quiz_Demo.csv', index=False)
@@ -75,6 +75,7 @@ file_selezionato = mappa_quiz[scelta_utente]
 @st.cache_data
 def load_data(filename):
     try:
+        # engine='python' e sep=None aiutano a rilevare automaticamente il separatore
         return pd.read_csv(filename, sep=None, engine='python')
     except Exception as e:
         return None
@@ -85,10 +86,10 @@ if df is None:
     st.error(f"Errore nella lettura del file {file_selezionato}.")
     st.stop()
 
-# Verifica colonne minime
+# Verifica colonne minime (case insensitive per robustezza o standard)
 colonne_richieste = ['domanda', 'opzioneA', 'opzioneB', 'opzioneC', 'opzioneD', 'soluzione']
 if not all(col in df.columns for col in colonne_richieste):
-    st.error(f"Il file {file_selezionato} non ha le colonne corrette.")
+    st.error(f"Il file {file_selezionato} non ha le colonne corrette ({colonne_richieste}).")
     st.stop()
 
 # --- 5. LOGICA QUIZ ---
@@ -117,7 +118,22 @@ if st.session_state.domanda_corrente is None:
 
 q = st.session_state.domanda_corrente
 opts = st.session_state.opzioni_mix
-corretta = q['soluzione']
+
+# -------------------------------------------------------------------------
+# MODIFICA QUI: Logica per convertire "A/B/C/D" nel testo della risposta
+# -------------------------------------------------------------------------
+soluzione_raw = str(q['soluzione']).strip()
+mappa_lettere = {'A': 'opzioneA', 'B': 'opzioneB', 'C': 'opzioneC', 'D': 'opzioneD'}
+
+# Se la soluzione è una lettera (es. "A"), prendiamo il testo dalla colonna opzioneA
+if soluzione_raw.upper() in mappa_lettere:
+    colonna_target = mappa_lettere[soluzione_raw.upper()]
+    corretta = str(q[colonna_target]).strip()
+else:
+    # Altrimenti assumiamo che la soluzione sia già il testo completo
+    corretta = soluzione_raw
+# -------------------------------------------------------------------------
+
 motivazione = q['motivazione'] if 'motivazione' in df.columns else ""
 
 # --- 6. CSS STILE E COLORI ---
@@ -133,6 +149,7 @@ div.stButton > button:hover {
     box-shadow: 0 6px 8px rgba(0,0,0,0.15);
 }
 """
+
 if st.session_state.fase == 'verificato':
     posizioni = {
         0: "div[data-testid='column']:nth-of-type(1) div.stButton:nth-of-type(1) button",
@@ -140,17 +157,17 @@ if st.session_state.fase == 'verificato':
         2: "div[data-testid='column']:nth-of-type(1) div.stButton:nth-of-type(2) button",
         3: "div[data-testid='column']:nth-of-type(2) div.stButton:nth-of-type(2) button"
     }
-    selezione = st.session_state.selezione_utente
+    selezione = str(st.session_state.selezione_utente).strip()
+    
     for i, opt in enumerate(opts):
         selector = posizioni[i]
         val_opt = str(opt).strip()
-        val_corr = str(corretta).strip()
-        val_sel = str(selezione).strip()
+        val_corr = corretta # Ora contiene il testo completo, non "A" o "B"
         
         if val_opt == val_corr:
             # VERDE (Corretta)
             css_style += f"{selector} {{ background-color: #d1e7dd !important; border: 2px solid #198754 !important; color: #0f5132 !important; opacity: 1 !important; }}"
-        elif val_opt == val_sel and val_sel != val_corr:
+        elif val_opt == selezione and selezione != val_corr:
             # ROSSO (Errore utente)
             css_style += f"{selector} {{ background-color: #f8d7da !important; border: 2px solid #dc3545 !important; color: #842029 !important; opacity: 1 !important; }}"
         else:
@@ -162,14 +179,14 @@ st.markdown(css_style, unsafe_allow_html=True)
 
 # --- 7. INTERFACCIA UI ---
 
-st.title(f"{scelta_utente}") # Titolo dinamico
+st.title(f"{scelta_utente}") 
 
 st.markdown(f"### {q['domanda']}")
 
 c1, c2 = st.columns(2)
 disabilitato = (st.session_state.fase == 'verificato')
 
-# Rendering bottoni con callback
+# Rendering bottoni
 with c1: st.button(opts[0], key="b0", use_container_width=True, disabled=disabilitato, on_click=gestisci_click, args=(opts[0],))
 with c2: st.button(opts[1], key="b1", use_container_width=True, disabled=disabilitato, on_click=gestisci_click, args=(opts[1],))
 with c1: st.button(opts[2], key="b2", use_container_width=True, disabled=disabilitato, on_click=gestisci_click, args=(opts[2],))
@@ -179,10 +196,12 @@ st.write("---")
 
 # Area Feedback
 if st.session_state.fase == 'verificato':
-    if str(st.session_state.selezione_utente).strip() == str(corretta).strip():
+    sel_utente = str(st.session_state.selezione_utente).strip()
+    
+    if sel_utente == corretta:
         st.success("**Risposta Esatta!**")
     else:
-        st.error(f"**Sbagliato** La risposta giusta era: **{corretta}**")
+        st.error(f"**Sbagliato!** La risposta giusta era: **{corretta}**")
     
     if motivazione and str(motivazione) != "nan":
         st.info(f"**Motivazione:**\n\n{motivazione}")
