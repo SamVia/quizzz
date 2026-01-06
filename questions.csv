@@ -1,4 +1,4 @@
-domanda,opzioneA,opzioneB,opzioneC,opzioneD,soluzione
+domanda,opzioneA,opzioneB,opzioneC,opzioneD,soluzione, motivazione
 "In computing virtualization, the Trap-And-Emulate approach:",Is used only to intercept sensitive (and not privileged) CPU instructions.,Is used only to intercept privileged CPU instructions.,Is used only to intercept system calls.,Can be used to emulate all the instructions that generate a trap.,D
 CPU para-virtualization:,Replaces some source code of the GuestOS kernel with the proper equivalent function in the HostOS kernel.,Replaces system calls with an equivalent function of the GuestOS kernel.,Replaces system calls with an equivalent function of the HostOS kernel.,Replaces some binary code of the GuestOS kernel with the proper equivalent function in the HostOS kernel.,A
 Modern CPUs:,"Have many CPU rings, and N of them are intended for executing OS kernels (where N can be dynamically programmed).","Have 8 CPU rings, but we can use only 4 of them at each time.","Have many CPU rings, and 2 of them are intended for executing OS kernels.",Have 8 CPU rings (from least to most privileged),C
