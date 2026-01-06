@@ -86,6 +86,22 @@ if df is None:
     st.error(f"Errore nella lettura del file {file_selezionato}.")
     st.stop()
 
+if 'quiz_df' not in st.session_state or st.session_state.get('current_quiz_name') != scelta_utente:
+    # 1. Salviamo il nome del quiz corrente per capire se l'utente cambia argomento
+    st.session_state.current_quiz_name = scelta_utente
+    
+    # 2. Mescoliamo il dataframe UNA VOLTA SOLA e lo salviamo nello stato
+    # .sample(frac=1) è il modo pandas per mescolare le righe
+    st.session_state.quiz_df = df.sample(frac=1).reset_index(drop=True)
+    
+    # 3. Resettiamo l'indice
+    st.session_state.idx = 0
+    
+    # 4. Resettiamo lo stato della domanda (importante per pulire la UI)
+    reset_quiz_state()
+    # Forziamo il caricamento della prima domanda
+    st.session_state.domanda_corrente = None
+
 # Verifica colonne minime (case insensitive per robustezza o standard)
 colonne_richieste = ['domanda', 'opzioneA', 'opzioneB', 'opzioneC', 'opzioneD', 'soluzione']
 if not all(col in df.columns for col in colonne_richieste):
@@ -98,8 +114,19 @@ if 'domanda_corrente' not in st.session_state:
     reset_quiz_state()
 
 def nuova_domanda():
-    idx = random.randint(0, len(df) - 1)
-    row = df.iloc[idx]
+    # Controlliamo se abbiamo finito le domande
+    if st.session_state.idx >= len(st.session_state.quiz_df):
+        st.warning("Hai completato tutte le domande di questo quiz!")
+        st.stop() # O logica per ricominciare
+        return
+
+    # Recuperiamo la riga corrente usando l'indice salvato
+    row = st.session_state.quiz_df.iloc[st.session_state.idx]
+    
+    # Incrementiamo l'indice PER LA PROSSIMA VOLTA
+    st.session_state.idx += 1
+    
+    # ... Logica esistente per mescolare le opzioni ...
     opts = [row['opzioneA'], row['opzioneB'], row['opzioneC'], row['opzioneD']]
     random.shuffle(opts)
     
