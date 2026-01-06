@@ -72,12 +72,26 @@ file_selezionato = mappa_quiz[scelta_utente]
 
 # --- 4. CARICAMENTO DATI ---
 
+# --- 4. CARICAMENTO DATI ---
+
 @st.cache_data
 def load_data(filename):
     try:
-        # engine='python' e sep=None aiutano a rilevare automaticamente il separatore
-        return pd.read_csv(filename, sep=None, engine='python')
+        df = pd.read_csv(filename, sep=None, engine='python')
+        
+        # 1. RIEMPI I VALORI VUOTI (NaN) CON STRINGHE VUOTE
+        df = df.fillna("")
+        
+        # 2. FORZA LA CONVERSIONE IN STRINGA DELLE COLONNE OPZIONI
+        # Questo evita che numeri (es. "1") vengano letti come interi, o celle vuote come float
+        cols_opts = ['opzioneA', 'opzioneB', 'opzioneC', 'opzioneD']
+        for col in cols_opts:
+            if col in df.columns:
+                df[col] = df[col].astype(str)
+                
+        return df
     except Exception as e:
+        st.error(f"Errore caricamento: {e}")
         return None
 
 df = load_data(file_selezionato)
