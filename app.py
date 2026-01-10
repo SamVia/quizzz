@@ -159,6 +159,16 @@ def avanza_domanda_esame():
     st.session_state.risposta_gia_valutata = False
     nuova_domanda()
     st.rerun()
+# added for exam mode
+def salta_domanda_esame():
+    if not st.session_state.salto_gia_contato:
+        st.session_state.domande_esame_fatte += 1
+        st.session_state.salto_gia_contato = True
+
+    st.session_state.risposta_gia_valutata = False
+    st.session_state.salto_gia_contato = False
+    nuova_domanda()
+    st.rerun()
 
 if st.session_state.domanda_corrente is None:
     nuova_domanda()
@@ -267,8 +277,17 @@ if st.session_state.fase == 'verificato':
 
 elif st.session_state.fase == 'selezione':
     if st.button("Salta Domanda", use_container_width=True):
-        nuova_domanda()
-        st.rerun()
+        if st.session_state.modalita_esame:
+            salta_domanda_esame()
+        else:
+            nuova_domanda()
+            st.rerun()
+
+#old Version
+#elif st.session_state.fase == 'selezione':
+ #   if st.button("Salta Domanda", use_container_width=True):
+  #      nuova_domanda()
+   #     st.rerun()
     
 # ==============================
 # 8. MODALITÀ ESAME (ADD-ON FIX)
@@ -288,6 +307,9 @@ if 'domande_esame_fatte' not in st.session_state:
 
 if 'risposta_gia_valutata' not in st.session_state:
     st.session_state.risposta_gia_valutata = False
+    
+if 'salto_gia_contato' not in st.session_state:
+    st.session_state.salto_gia_contato = False
 
 
 # --- Toggle sidebar ---
