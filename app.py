@@ -255,3 +255,76 @@ elif st.session_state.fase == 'selezione':
     if st.button("Salta Domanda", use_container_width=True):
         nuova_domanda()
         st.rerun()
+    
+# ==============================
+# 8. MODALITÀ ESAME (ADD-ON)
+# ==============================
+
+# Inizializzazione stato esame
+if 'modalita_esame' not in st.session_state:
+    st.session_state.modalita_esame = False
+
+if 'punteggio' not in st.session_state:
+    st.session_state.punteggio = 0.0
+
+if 'domande_fatte' not in st.session_state:
+    st.session_state.domande_fatte = 0
+
+MAX_DOMANDE_ESAME = 33
+
+# Toggle modalità esame (sidebar)
+st.sidebar.markdown("---")
+st.session_state.modalita_esame = st.sidebar.checkbox(
+    "📝 Modalità ESAME (33 domande)",
+    value=st.session_state.modalita_esame
+)
+
+# Reset automatico quando si attiva l’esame
+if st.session_state.modalita_esame and st.session_state.domande_fatte == 0:
+    st.session_state.punteggio = 0.0
+
+# Aggiornamento punteggio SOLO in modalità esame
+if st.session_state.fase == 'verificato' and st.session_state.modalita_esame:
+    if 'punteggio_calcolato' not in st.session_state:
+        if sel_utente == corretta:
+            st.session_state.punteggio += 1
+        else:
+            st.session_state.punteggio -= 0.33
+
+        st.session_state.domande_fatte += 1
+        st.session_state.punteggio_calcolato = True
+
+# Reset flag al cambio domanda
+if st.session_state.fase == 'selezione':
+    st.session_state.punteggio_calcolato = False
+
+# Barra progresso esame
+if st.session_state.modalita_esame:
+    st.progress(st.session_state.domande_fatte / MAX_DOMANDE_ESAME)
+    st.write(
+        f"📊 **Domande:** {st.session_state.domande_fatte}/{MAX_DOMANDE_ESAME} | "
+        f"🎯 **Punteggio:** {round(st.session_state.punteggio, 2)}"
+    )
+
+# Fine esame
+if st.session_state.modalita_esame and st.session_state.domande_fatte >= MAX_DOMANDE_ESAME:
+    st.markdown("---")
+    st.subheader("🏁 ESAME TERMINATO")
+
+    punteggio_finale = round(st.session_state.punteggio, 2)
+
+    st.metric("Punteggio Finale", punteggio_finale)
+
+    if punteggio_finale >= 18:
+        st.success("✅ **ESAME SUPERATO**")
+    else:
+        st.error("❌ **ESAME NON SUPERATO**")
+
+    if st.button("🔄 Ricomincia Esame", use_container_width=True):
+        st.session_state.domande_fatte = 0
+        st.session_state.punteggio = 0.0
+        st.session_state.idx = 0
+        reset_quiz_state()
+        st.rerun()
+
+    st.stop()
