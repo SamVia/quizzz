@@ -153,6 +153,12 @@ def nuova_domanda():
 def gestisci_click(risposta_cliccata):
     st.session_state.selezione_utente = risposta_cliccata
     st.session_state.fase = 'verificato'
+#modified
+# --- Reset flag quando si passa alla domanda successiva ---
+def avanza_domanda_esame():
+    st.session_state.risposta_gia_valutata = False
+    nuova_domanda()
+    st.rerun()
 
 if st.session_state.domanda_corrente is None:
     nuova_domanda()
@@ -299,28 +305,20 @@ if st.session_state.modalita_esame:
         f"🎯 **Punteggio:** {round(st.session_state.punteggio, 2)}"
     )
 
-# --- Calcolo punteggio (UNA VOLTA) ---
+# --- Calcolo punteggio (IMMEDIATO) ---
 if (
     st.session_state.modalita_esame
     and st.session_state.fase == 'verificato'
     and not st.session_state.risposta_gia_valutata
 ):
-    if sel_utente == corretta:
+    if st.session_state.selezione_utente == corretta:
         st.session_state.punteggio += 1
     else:
         st.session_state.punteggio -= 0.33
 
     st.session_state.domande_esame_fatte += 1
     st.session_state.risposta_gia_valutata = True
-
-
-# --- Reset flag quando si passa alla domanda successiva ---
-def avanza_domanda_esame():
-    st.session_state.risposta_gia_valutata = False
-    nuova_domanda()
-    st.rerun()
-
-
+    
 # --- Fine esame ---
 if (
     st.session_state.modalita_esame
