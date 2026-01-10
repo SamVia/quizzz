@@ -248,11 +248,11 @@ if st.session_state.fase == 'verificato':
         st.info(f"**Motivazione:**\n\n{motivazione}")
 
     if st.button("PROSSIMA DOMANDA", type="primary", use_container_width=True):
-    if st.session_state.modalita_esame:
-        avanza_domanda_esame()
-    else:
-        nuova_domanda()
-        st.rerun()
+        if st.session_state.modalita_esame:
+            avanza_domanda_esame()
+        else:
+            nuova_domanda()
+            st.rerun()
 
 #old VERSION
     #if st.button("PROSSIMA DOMANDA", type="primary", use_container_width=True):
