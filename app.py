@@ -163,6 +163,15 @@ def gestisci_click(risposta_cliccata):
 #modified
 # --- Reset flag quando si passa alla domanda successiva ---
 def avanza_domanda_esame():
+    # Se l'esame è già finito, ricomincia da capo
+    if st.session_state.domande_esame_fatte >= MAX_DOMANDE_ESAME:
+        st.session_state.punteggio = 0.0
+        st.session_state.domande_esame_fatte = 0
+        st.session_state.idx = 0
+        reset_quiz_state()
+        st.rerun()
+        return
+    
     st.session_state.risposta_gia_valutata = False
     nuova_domanda()
     st.rerun()
