@@ -348,7 +348,8 @@ st.session_state.modalita_esame = st.sidebar.checkbox(
 
 # --- Mostra stato esame ---
 if st.session_state.modalita_esame:
-    st.progress(st.session_state.domande_esame_fatte / MAX_DOMANDE_ESAME)
+    progress_value = min(st.session_state.domande_esame_fatte / MAX_DOMANDE_ESAME, 1.0)
+    st.progress(progress_value)
     st.write(
         f"📊 **Domande:** {st.session_state.domande_esame_fatte}/{MAX_DOMANDE_ESAME} | "
         f"🎯 **Punteggio:** {round(st.session_state.punteggio, 2)}"
