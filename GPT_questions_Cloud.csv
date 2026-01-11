@@ -1,201 +1,201 @@
-question,optionA,optionB,optionC,answer
-Why did Amazon start cloud computing services like AWS?,To compete with Google,To sell unused computing capacity during non-peak times,To replace physical datacenters,B
-In which year was Amazon Web Services (AWS) introduced?,2000,2006,2010,B
-Which services are part of AWS?,EC2 and S3,Gmail and Google Docs,OpenStack and Kubernetes,A
-Why is it called cloud computing?,Services are stored in the sky,Users do not care about physical location of services,It only works wirelessly,B
-What best defines cloud computing?,Local fixed resources,A shared pool of on-demand configurable resources,Only storage services,B
-Which deployment model uses third-party resources?,Private cloud,Public cloud,Hybrid cloud,B
-Which cloud model combines public and private clouds?,Private cloud,Community cloud,Hybrid cloud,C
-Which is NOT an advantage of public cloud?,Elasticity,Pay-per-use model,Low latency for autonomous driving,C
-Which is a limitation of cloud computing?,Automatic updates,Data location and network latency,Unlimited resources,B
-Why is cloud not suitable for autonomous driving?,High cost,Network latency issues,Lack of virtualization,B
-Why are Cloud Management Systems needed?,To manage servers centrally,To remove servers,To increase storage,A
-Which CMS is mainly used for containers?,OpenStack,Kubernetes,VMware vSphere,B
-Which CMS is mainly used for virtual machines?,Docker,OpenStack,Lambda,B
-What does Hardware as a Service (HaaS) provide?,Virtual machines,Physical space with power and cooling,Ready applications,B
-Which model supports lift-and-shift?,PaaS,SaaS,IaaS,C
-Why is PaaS more expensive than IaaS?,Provider manages scalability,Less storage available,No virtualization,A
-Which model allows using software without coding?,IaaS,PaaS,SaaS,C
-Which is an example of SaaS?,Amazon EC2,Google Docs,Kubernetes,B
-What is Cloud at the Edge designed for?,High-latency apps,Low-latency and data-intensive apps,Email services,B
-What is liquid computing?,A production cloud service,User-selected deployment,A research approach that decides where apps run,C
-Why are datacenters far from city centers?,Security concerns,High land cost,Network limits,B
-What is the purpose of hot and cold corridors?,Increase bandwidth,Optimize cooling airflow,Separate users,B
-What is a cloud zone?,A group of regions,A single logical datacenter,A country-wide network,B
-Why are multiple zones used in a region?,Reduce cost,Improve availability and resilience,Limit access,B
-Who is responsible for resiliency without managed services?,Cloud provider,Customer,IXP,B
-What is an Internet Exchange Point (IXP)?,Cloud datacenter,Layer-2 network for providers,Private enterprise network,B
-Which connection method is cheapest but least secure?,Dedicated connectivity,Internet connection,Internet exchange,B
-Which connection offers best balance of cost and security?,Public internet,Dedicated connectivity,Internet exchange,C
-What is OpenStack?,A proprietary cloud software,An open-source cloud management software,A container orchestration system,B
-Which language is OpenStack mainly written in?,Java,Python,C++,B
-Since when has OpenStack been in use?,2005,2010,2018,B
-Which cloud model does OpenStack mainly support?,SaaS,PaaS,IaaS,C
-Why is OpenStack still widely used?,Only for containers,Multi-tenancy with VM isolation,Low hardware cost,B
-Which architecture does OpenStack use?,Monolithic architecture,Component-based architecture,Client-server only,B
-Which OpenStack module manages virtual machines?,Neutron,Nova,Glance,B
-Which OpenStack module is responsible for networking?,Nova,Keystone,Neutron,C
-What is Glance in OpenStack?,VM scheduler,Image storage service,Network controller,B
-Which OpenStack service handles authentication and authorization?,Horizon,Keystone,Cinder,B
-What is Swift in Openstack used for?,Block storage,Object storage,Image storage,B
-What does Cinder provide in OpenStack?,Object storage,Raw or formatted block volumes,Networking services,B
-Which component provides the user dashboard in OpenStack?,Heat,Horizon,Ceilometer,B
-What is Ceilometer used for in OpenStack?,VM scheduling,Monitoring and metering data collection,Billing only,B
-What is the purpose of Heat?,Monitoring,Orchestration of complex services,Networking,B
-Heat mainly works by reading which type of file?,XML/JSON templates,Shell scripts,Python files,A
-Which communication defines a specific destination?,Indirect communication,Direct communication,Broadcast,B
-What is indirect communication based on?,Direct sockets,Message broker and topics,REST API,B
-What is a stateless message broker?,Stores messages permanently,Only sends messages in real time,Uses databases,B
-What is the controller node responsible for?,Running VMs,Controlling and orchestrating services,Storing images,B
-Where are VMs actually executed?,Controller node,Compute nodes,Network nodes,B
-How do users interact with OpenStack?,Only via Horizon,"REST API, CLI, and Horizon",Only via CLI,B
-Which interface is the most complete but less human-friendly?,Horizon,CLI,REST API,C
-How do OpenStack components communicate internally?,REST API,Message broker,SSH,B
-Where do OpenStack services store their state?,Shared database,Private MySQL databases,In memory only,B
-Does OpenStack provide native DB high availability?,Yes,No,Only for Keystone,B
-Which tool can be used for database HA?,Docker,Galera,Kubernetes,B
-Why are dedicated Neutron servers used?,Low traffic,Heavy network traffic,Image storage,B
-Which Neutron component provides routing?,DHCP agent,L3 agent,Plugin agent,B
-Which network is used for management traffic?,VM external network,Management network,VM internal network,B
-Which network handles traffic between VMs?,Management network,VM internal network,VM external network,B
-Which network connects VMs to the internet?,Management network,VM internal network,VM external network,C
-Which library does Nova use to interact with hypervisors?,Docker,LibVirt,OpenFlow,B
-Which hypervisors can be used with Nova?,Only KVM,KVM and VMware,Only VMware,B
-What does the Nova scheduler do?,Creates networks,Chooses the best compute node,Stores images,B
-Which algorithm does Nova scheduler use?,Round robin,Filter and weight,Random,B
-What is an availability zone?,A physical datacenter,A group of compute nodes,A single VM,B
-Why are VLANs not suitable for large datacenters?,They are unlimited,L2 is not scalable,They are too fast,B
-What technology is used instead of VLANs?,NAT,Tunneling,Load balancing,B
-What is DevStack?,Production OpenStack,A lightweight single-machine OpenStack,Container platform,B
-What is the purpose of the ML2 plugin?,VM scheduling,Support multiple L2 technologies,User authentication,B
-Which technologies can ML2 manage?,Only VLANs,"VLANs, VXLAN, GRE, etc.",Only VXLAN,B
-Why does OpenStack use drivers in networking?,To manage hardware and software networks,To replace routers,To reduce latency,A
-Why is Kubernetes needed?,To replace VMs,To manage many containers manually,To orchestrate hundreds or thousands of containers,C
-What is the most widely used container orchestrator?,Docker Swarm,Mesos,Kubernetes,C
-What does it mean that Kubernetes APIs are decoupled?,APIs depend on implementation,Same API different implementations,APIs are deprecated,B
-Which specification style does Kubernetes use?,Imperative,Declarative,Procedural,B
-What does the control loop do?,Stops containers,Aligns current state to desired state,Deletes pods,B
-Why is the imperative approach weak?,It is too fast,Results depend on initial conditions,It is declarative,B
-What is a Kubernetes controller?,A UI component,A control loop watching cluster state,A container runtime,B
-Where do controllers watch the cluster state?,etcd,API server,CLI,B
-Which files define Kubernetes resources?,XML,INI,YAML,C
-Which fields define object type?,name and id,apiVersion and kind,spec and status,B
-What does spec describe?,Current state,Desired state,Metadata,B
-What does status describe?,Desired state,Current state,Permissions,B
-What are labels used for?,System semantics,User-relevant metadata,Object storage,B
-What are annotations used for?,Core logic,Enrich object information,Networking,B
-What is a Pod?,A VM,A group of nodes,Basic execution unit,C
-Where can a Pod run?,Multiple nodes,Single node,Control plane,B
-Why are sidecars used?,To replace main container,To extend main container,To reduce memory,B
-What are init containers?,Containers running after app,Containers running before app,Sidecars,B
-How do init containers run?,In parallel,Sequentially and to completion,Randomly,B
-What are privileged pods used for?,Normal workloads,OS-level operations,UI access,B
-What does Namespace provide?,VM isolation,Logical cluster isolation,Storage isolation,B
-What is the cattle model?,Fix failed servers,Replace failed replicas,Use pets,B
-Which object implements cattle pattern?,Deployment,ReplicaSet,Pod,B
-What manages ReplicaSets lifecycle?,User directly,Deployment,DaemonSet,B
-What happens when a new Deployment version is applied?,Pods are deleted only,New ReplicaSet is created,Nothing,B
-What is a DaemonSet?,One pod total,One pod per node,One pod per namespace,B
-Which apps use DaemonSets?,Databases,Networking and monitoring,Web apps,B
-What are StatefulSets used for?,Stateless apps,Apps with stable identity,Batch jobs,B
-Which property is preserved in StatefulSets?,Random naming,Stable network identity,No storage,B
-Why is HPA needed?,Fixed replicas,Autoscaling pods,Monitoring,B
-Which metrics can HPA use?,Disk only,CPU/memory and external metrics,Network only,B
-Are metrics available by default?,Yes,No,Only CPU,B
-How are configs injected into pods?,Hardcoded,ConfigMap and Secret,Ingress,B
-How are Secrets stored in etcd?,Plaintext,Base64 encoded and encrypted,Hashed,B
-What is a Kubernetes Service?,A pod,A stable access abstraction,A VM,B
-Why are Services needed?,Pods are permanent,Pods are ephemeral,Pods have static IPs,B
-How does a Service select pods?,IP address,Label selector,Namespace,B
-Which Service type is default?,NodePort,ClusterIP,LoadBalancer,B
-Which Service exposes externally via cloud LB?,NodePort,LoadBalancer,ExternalName,B
-What does ExternalName service do?,Expose pods,Return CNAME record,Load balance,B
-Why is Ingress used?,Expose ClusterIP directly,Single IP for many apps,Replace services,B
-What is Ingress?,TCP proxy,HTTP/S reverse proxy,DNS server,B
-What is a headless service?,Service with LB,Service without ClusterIP,External service,B
-Does Kubernetes have fine-grained multitenancy by default?,Yes,No,Only in cloud,B
-What does NetworkPolicy implement?,Routing,Firewall rules,Storage,B
-What does ResourceQuota limit?,Network traffic,Object count/resources,Pod labels,B
-What are requests?,Maximum usage,Reserved resources,Network limits,B
-What are limits?,Reserved resources,Maximum usage,Default usage,B
-What does LimitRange define?,Namespaces,Min/max/default resources,Networking,B
-What is RBAC?,Storage control,API permission control,Pod scheduling,B
-What are worker nodes?,Control plane,Run pods only,Run applications,B
-What is the recommended max cluster size?,100 nodes,500 nodes,1000 nodes,C
-What is kubelet?,Scheduler,Node agent,API server,B
-What is kube-proxy?,Storage agent,Networking component,Controller,B
-What is containerd?,Scheduler,Container runtime,Network plugin,B
-What stores Kubernetes data?,MySQL,etcd,Redis,B
-What is etcd?,Relational DB,Key-value distributed store,Filesystem,B
-What does kube-controller-manager do?,Expose API,Enforce desired state,Run containers,B
-What does kube-scheduler decide?,Scaling,Pod placement,Networking,B
-What is affinity/anti-affinity used for?,Storage,Pod placement rules,Security,B
-What is cloud-controller-manager?,Local controller,Cloud provider integration,Network plugin,B
-How do users interact with Kubernetes?,GUI only,CLI kubectl and API,SSH only,B
-Where are addons deployed?,Default namespace,kube-system,User namespace,B
-What does cluster DNS provide?,Storage,Name resolution,Security,B
-What is a CRD?,Custom runtime,Custom resource definition,Custom node,B
-What do Operators do?,Run pods,React to CRD changes,Manage storage,B
-Which SDK supports Golang and Ansible?,Kubebuilder,OperatorSDK,Helm,B
-What is an APIServer aggregation used for?,Storage,Custom APIs routing,Networking,B
-What are webhooks used for?,Storage validation,Mutating/validating requests,Scaling,B
-What is OPA?,Scheduler,Policy engine,Storage driver,B
-What do custom schedulers do?,Replace kubelet,Assign nodes to pods,Run containers,B
-"What are CRI, CSI, CNI?","APIs for runtime, storage, network",Monitoring tools,Security layers,A
-What is a finalizer?,Deletion blocker,Cleanup mechanism,Init container,B
-What are audit logs?,Container logs,API access logs,Node logs,B
-What is a cloud-native application?,An on-premise application,An app designed to fully leverage cloud features,A monolithic VM-based app,B
-What is the goal of cloud-native applications?,Reduce cost only,Scalability and resilience,Single deployment,C
-Who introduced the 12 Factor App principles?,Google,Heroku developers,Amazon,B
-What is the main goal of the 12 Factor App?,Security only,Portability and scalability,Hardware optimization,B
-What does Single Codebase mean?,Multiple repos per service,All app-related files in one repo,No version control,B
-How are dependencies handled in 12 Factor App?,Implicitly,Explicitly declared and isolated,OS-managed only,B
-Where should configuration be stored?,In code,In environment variables,In binaries,B
-Which Kubernetes objects help manage configuration?,Deployments only,ConfigMaps and Secrets,Ingress,B
-What are backing services?,Internal libraries,Externally attached resources,Compiled binaries,B
-"Why separate build, release and run?",Simplify code,Clear lifecycle stages,Reduce containers,B
-Which tool is a Kubernetes package manager?,Kustomize,Docker,Helm,C
-What are Helm charts?,Container images,Pre-configured Kubernetes resources,VM templates,B
-How should processes be executed?,Stateful,Stateless,Single-threaded,B
-Where should shared state be stored?,Inside containers,External services,Local filesystem,B
-What does port binding imply?,Using Apache/Tomcat,Self-contained services,Static ports,B
-How should scalability be achieved?,Vertical scaling,Horizontal scaling,Multithreading,B
-Which Kubernetes tool scales pods horizontally?,ReplicaSet,HPA,DaemonSet,B
-What does disposability mean?,No restarts allowed,Fast start and graceful shutdown,Long-lived pods,B
-Which deployment strategies support disposability?,Big bang only,Rolling and Canary,Manual,B
-Which strategies need Service Mesh?,Rolling update,A/B testing and Shadow,Recreate,B
-What is Dev/Prod parity?,Different environments,Similar environments,Manual sync,B
-What helps reduce Dev/Prod gaps?,Manual testing,CI/CD,SSH,B
-Which CI/CD tools are Kubernetes-native?,Jenkins only,JenkinsX and ArgoCD,TravisCI,B
-What is GitOps?,Manual ops,Git-based infrastructure automation,Monitoring system,B
-Which is NOT an IaC approach?,Terraform,Ansible,SSH scripting,C
-Which tools create local Kubernetes clusters?,EKS only,Minikube/MicroK8s/KIND,OpenStack,B
-How should logs be treated?,Stored locally,As event streams on stdout,Ignored,B
-What happens to logs after pod deletion?,Persist forever,Lost unless aggregated,Stored in etcd,B
-Which tools collect logs as DaemonSets?,Fluentd/FluentBit,Kubectl,Helm,A
-What is an admin process?,Long-running task,One-off management task,Sidecar,B
-What problem do microservices solve?,Security only,Scalability and maintainability,Logging,B
-How do microservices communicate?,Shared memory,Network calls,Files,B
-What is east-west traffic?,Internet traffic,Internal service-to-service traffic,User traffic,B
-What is a challenge of microservices?,Simple debugging,High east-west traffic,Low complexity,B
-What problem does Service Mesh address?,VM scheduling,Service-to-service concerns,Storage,B
-What is a sidecar in Service Mesh?,Main container,Proxy container,Init container,B
-What is an API Gateway?,Centralized traffic manager,Container runtime,Ingress,B
-How is Service Mesh different from API Gateway?,Centralized,Distributed per service,External only,B
-Which component implements sidecars?,Istio,Envoy,Kubernetes,B
-What is Envoy?,Container runtime,TCP proxy,Linux kernel,B
-What is the cost of Service Mesh?,Zero overhead,20–30% CPU increase,Memory only,B
-What is DevOps?,Separate teams,Unified dev and ops practices,Monitoring tool,B
-What is Continuous Integration?,Manual merge,Frequent code integration and testing,Deployment only,B
-What is Continuous Delivery?,Manual deploy,Automated release readiness,Autoscaling,B
-What is Continuous Deployment?,Manual approval,Automatic production deploy,Build only,B
-Is CI required for CD?,No,Yes,Optional,B
-What is Infrastructure as Code?,Manual infra,Infra defined in code,VM snapshots,B
-Why is IaC useful?,Less visibility,Version control and collaboration,Slower changes,B
-What is GitOps source of truth?,Cloud provider,Git repository,API server,B
-Which component applies GitOps changes?,Scheduler,Deployment tool,Ingress,B
-What is an advantage of GitOps?,Manual rollback,Versioned infrastructure,No CI,B
-What is a disadvantage of GitOps?,No security,Learning curve,No automation,B
-What is declarative configuration?,Step-by-step instructions,Desired end state,System scripts,B
-What is idempotency?,Multiple outcomes,Same result every time,Random behavior,B
-Why declarative configs improve recovery?,Manual restore,Reapply desired state,Snapshots,B
+domanda,opzioneA,opzioneB,optionC,opzioneD,,soluzione
+Why did Amazon start cloud computing services like AWS?,To compete with Google,To sell unused computing capacity during non-peak times,To replace physical datacenters,,B
+In which year was Amazon Web Services (AWS) introduced?,2000,2006,2010,,B
+Which services are part of AWS?,EC2 and S3,Gmail and Google Docs,OpenStack and Kubernetes,,A
+Why is it called cloud computing?,Services are stored in the sky,Users do not care about physical location of services,It only works wirelessly,,B
+What best defines cloud computing?,Local fixed resources,A shared pool of on-demand configurable resources,Only storage services,,B
+Which deployment model uses third-party resources?,Private cloud,Public cloud,Hybrid cloud,,B
+Which cloud model combines public and private clouds?,Private cloud,Community cloud,Hybrid cloud,,C
+Which is NOT an advantage of public cloud?,Elasticity,Pay-per-use model,Low latency for autonomous driving,,C
+Which is a limitation of cloud computing?,Automatic updates,Data location and network latency,Unlimited resources,,B
+Why is cloud not suitable for autonomous driving?,High cost,Network latency issues,Lack of virtualization,,B
+Why are Cloud Management Systems needed?,To manage servers centrally,To remove servers,To increase storage,,A
+Which CMS is mainly used for containers?,OpenStack,Kubernetes,VMware vSphere,,B
+Which CMS is mainly used for virtual machines?,Docker,OpenStack,Lambda,,B
+What does Hardware as a Service (HaaS) provide?,Virtual machines,Physical space with power and cooling,Ready applications,,B
+Which model supports lift-and-shift?,PaaS,SaaS,IaaS,,C
+Why is PaaS more expensive than IaaS?,Provider manages scalability,Less storage available,No virtualization,,A
+Which model allows using software without coding?,IaaS,PaaS,SaaS,,C
+Which is an example of SaaS?,Amazon EC2,Google Docs,Kubernetes,,B
+What is Cloud at the Edge designed for?,High-latency apps,Low-latency and data-intensive apps,Email services,,B
+What is liquid computing?,A production cloud service,User-selected deployment,A research approach that decides where apps run,,C
+Why are datacenters far from city centers?,Security concerns,High land cost,Network limits,,B
+What is the purpose of hot and cold corridors?,Increase bandwidth,Optimize cooling airflow,Separate users,,B
+What is a cloud zone?,A group of regions,A single logical datacenter,A country-wide network,,B
+Why are multiple zones used in a region?,Reduce cost,Improve availability and resilience,Limit access,,B
+Who is responsible for resiliency without managed services?,Cloud provider,Customer,IXP,,B
+What is an Internet Exchange Point (IXP)?,Cloud datacenter,Layer-2 network for providers,Private enterprise network,,B
+Which connection method is cheapest but least secure?,Dedicated connectivity,Internet connection,Internet exchange,,B
+Which connection offers best balance of cost and security?,Public internet,Dedicated connectivity,Internet exchange,,C
+What is OpenStack?,A proprietary cloud software,An open-source cloud management software,A container orchestration system,,B
+Which language is OpenStack mainly written in?,Java,Python,C++,,B
+Since when has OpenStack been in use?,2005,2010,2018,,B
+Which cloud model does OpenStack mainly support?,SaaS,PaaS,IaaS,,C
+Why is OpenStack still widely used?,Only for containers,Multi-tenancy with VM isolation,Low hardware cost,,B
+Which architecture does OpenStack use?,Monolithic architecture,Component-based architecture,Client-server only,,B
+Which OpenStack module manages virtual machines?,Neutron,Nova,Glance,,B
+Which OpenStack module is responsible for networking?,Nova,Keystone,Neutron,,C
+What is Glance in OpenStack?,VM scheduler,Image storage service,Network controller,,B
+Which OpenStack service handles authentication and authorization?,Horizon,Keystone,Cinder,,B
+What is Swift in Openstack used for?,Block storage,Object storage,Image storage,,B
+What does Cinder provide in OpenStack?,Object storage,Raw or formatted block volumes,Networking services,,B
+Which component provides the user dashboard in OpenStack?,Heat,Horizon,Ceilometer,,B
+What is Ceilometer used for in OpenStack?,VM scheduling,Monitoring and metering data collection,Billing only,,B
+What is the purpose of Heat?,Monitoring,Orchestration of complex services,Networking,,B
+Heat mainly works by reading which type of file?,XML/JSON templates,Shell scripts,Python files,,A
+Which communication defines a specific destination?,Indirect communication,Direct communication,Broadcast,,B
+What is indirect communication based on?,Direct sockets,Message broker and topics,REST API,,B
+What is a stateless message broker?,Stores messages permanently,Only sends messages in real time,Uses databases,,B
+What is the controller node responsible for?,Running VMs,Controlling and orchestrating services,Storing images,,B
+Where are VMs actually executed?,Controller node,Compute nodes,Network nodes,,B
+How do users interact with OpenStack?,Only via Horizon,"REST API, CLI, and Horizon",Only via CLI,,B
+Which interface is the most complete but less human-friendly?,Horizon,CLI,REST API,,C
+How do OpenStack components communicate internally?,REST API,Message broker,SSH,,B
+Where do OpenStack services store their state?,Shared database,Private MySQL databases,In memory only,,B
+Does OpenStack provide native DB high availability?,Yes,No,Only for Keystone,,B
+Which tool can be used for database HA?,Docker,Galera,Kubernetes,,B
+Why are dedicated Neutron servers used?,Low traffic,Heavy network traffic,Image storage,,B
+Which Neutron component provides routing?,DHCP agent,L3 agent,Plugin agent,,B
+Which network is used for management traffic?,VM external network,Management network,VM internal network,,B
+Which network handles traffic between VMs?,Management network,VM internal network,VM external network,,B
+Which network connects VMs to the internet?,Management network,VM internal network,VM external network,,C
+Which library does Nova use to interact with hypervisors?,Docker,LibVirt,OpenFlow,,B
+Which hypervisors can be used with Nova?,Only KVM,KVM and VMware,Only VMware,,B
+What does the Nova scheduler do?,Creates networks,Chooses the best compute node,Stores images,,B
+Which algorithm does Nova scheduler use?,Round robin,Filter and weight,Random,,B
+What is an availability zone?,A physical datacenter,A group of compute nodes,A single VM,,B
+Why are VLANs not suitable for large datacenters?,They are unlimited,L2 is not scalable,They are too fast,,B
+What technology is used instead of VLANs?,NAT,Tunneling,Load balancing,,B
+What is DevStack?,Production OpenStack,A lightweight single-machine OpenStack,Container platform,,B
+What is the purpose of the ML2 plugin?,VM scheduling,Support multiple L2 technologies,User authentication,,B
+Which technologies can ML2 manage?,Only VLANs,"VLANs, VXLAN, GRE, etc.",Only VXLAN,,B
+Why does OpenStack use drivers in networking?,To manage hardware and software networks,To replace routers,To reduce latency,,A
+Why is Kubernetes needed?,To replace VMs,To manage many containers manually,To orchestrate hundreds or thousands of containers,,C
+What is the most widely used container orchestrator?,Docker Swarm,Mesos,Kubernetes,,C
+What does it mean that Kubernetes APIs are decoupled?,APIs depend on implementation,Same API different implementations,APIs are deprecated,,B
+Which specification style does Kubernetes use?,Imperative,Declarative,Procedural,,B
+What does the control loop do?,Stops containers,Aligns current state to desired state,Deletes pods,,B
+Why is the imperative approach weak?,It is too fast,Results depend on initial conditions,It is declarative,,B
+What is a Kubernetes controller?,A UI component,A control loop watching cluster state,A container runtime,,B
+Where do controllers watch the cluster state?,etcd,API server,CLI,,B
+Which files define Kubernetes resources?,XML,INI,YAML,,C
+Which fields define object type?,name and id,apiVersion and kind,spec and status,,B
+What does spec describe?,Current state,Desired state,Metadata,,B
+What does status describe?,Desired state,Current state,Permissions,,B
+What are labels used for?,System semantics,User-relevant metadata,Object storage,,B
+What are annotations used for?,Core logic,Enrich object information,Networking,,B
+What is a Pod?,A VM,A group of nodes,Basic execution unit,,C
+Where can a Pod run?,Multiple nodes,Single node,Control plane,,B
+Why are sidecars used?,To replace main container,To extend main container,To reduce memory,,B
+What are init containers?,Containers running after app,Containers running before app,Sidecars,,B
+How do init containers run?,In parallel,Sequentially and to completion,Randomly,,B
+What are privileged pods used for?,Normal workloads,OS-level operations,UI access,,B
+What does Namespace provide?,VM isolation,Logical cluster isolation,Storage isolation,,B
+What is the cattle model?,Fix failed servers,Replace failed replicas,Use pets,,B
+Which object implements cattle pattern?,Deployment,ReplicaSet,Pod,,B
+What manages ReplicaSets lifecycle?,User directly,Deployment,DaemonSet,,B
+What happens when a new Deployment version is applied?,Pods are deleted only,New ReplicaSet is created,Nothing,,B
+What is a DaemonSet?,One pod total,One pod per node,One pod per namespace,,B
+Which apps use DaemonSets?,Databases,Networking and monitoring,Web apps,,B
+What are StatefulSets used for?,Stateless apps,Apps with stable identity,Batch jobs,,B
+Which property is preserved in StatefulSets?,Random naming,Stable network identity,No storage,,B
+Why is HPA needed?,Fixed replicas,Autoscaling pods,Monitoring,,B
+Which metrics can HPA use?,Disk only,CPU/memory and external metrics,Network only,,B
+Are metrics available by default?,Yes,No,Only CPU,,B
+How are configs injected into pods?,Hardcoded,ConfigMap and Secret,Ingress,,B
+How are Secrets stored in etcd?,Plaintext,Base64 encoded and encrypted,Hashed,,B
+What is a Kubernetes Service?,A pod,A stable access abstraction,A VM,,B
+Why are Services needed?,Pods are permanent,Pods are ephemeral,Pods have static IPs,,B
+How does a Service select pods?,IP address,Label selector,Namespace,,B
+Which Service type is default?,NodePort,ClusterIP,LoadBalancer,,B
+Which Service exposes externally via cloud LB?,NodePort,LoadBalancer,ExternalName,,B
+What does ExternalName service do?,Expose pods,Return CNAME record,Load balance,,B
+Why is Ingress used?,Expose ClusterIP directly,Single IP for many apps,Replace services,,B
+What is Ingress?,TCP proxy,HTTP/S reverse proxy,DNS server,,B
+What is a headless service?,Service with LB,Service without ClusterIP,External service,,B
+Does Kubernetes have fine-grained multitenancy by default?,Yes,No,Only in cloud,,B
+What does NetworkPolicy implement?,Routing,Firewall rules,Storage,,B
+What does ResourceQuota limit?,Network traffic,Object count/resources,Pod labels,,B
+What are requests?,Maximum usage,Reserved resources,Network limits,,B
+What are limits?,Reserved resources,Maximum usage,Default usage,,B
+What does LimitRange define?,Namespaces,Min/max/default resources,Networking,,B
+What is RBAC?,Storage control,API permission control,Pod scheduling,,B
+What are worker nodes?,Control plane,Run pods only,Run applications,,B
+What is the recommended max cluster size?,100 nodes,500 nodes,1000 nodes,,C
+What is kubelet?,Scheduler,Node agent,API server,,B
+What is kube-proxy?,Storage agent,Networking component,Controller,,B
+What is containerd?,Scheduler,Container runtime,Network plugin,,B
+What stores Kubernetes data?,MySQL,etcd,Redis,,B
+What is etcd?,Relational DB,Key-value distributed store,Filesystem,,B
+What does kube-controller-manager do?,Expose API,Enforce desired state,Run containers,,B
+What does kube-scheduler decide?,Scaling,Pod placement,Networking,,B
+What is affinity/anti-affinity used for?,Storage,Pod placement rules,Security,,B
+What is cloud-controller-manager?,Local controller,Cloud provider integration,Network plugin,,B
+How do users interact with Kubernetes?,GUI only,CLI kubectl and API,SSH only,,B
+Where are addons deployed?,Default namespace,kube-system,User namespace,,B
+What does cluster DNS provide?,Storage,Name resolution,Security,,B
+What is a CRD?,Custom runtime,Custom resource definition,Custom node,,B
+What do Operators do?,Run pods,React to CRD changes,Manage storage,,B
+Which SDK supports Golang and Ansible?,Kubebuilder,OperatorSDK,Helm,,B
+What is an APIServer aggregation used for?,Storage,Custom APIs routing,Networking,,B
+What are webhooks used for?,Storage validation,Mutating/validating requests,Scaling,,B
+What is OPA?,Scheduler,Policy engine,Storage driver,,B
+What do custom schedulers do?,Replace kubelet,Assign nodes to pods,Run containers,,B
+"What are CRI, CSI, CNI?","APIs for runtime, storage, network",Monitoring tools,Security layers,,A
+What is a finalizer?,Deletion blocker,Cleanup mechanism,Init container,,B
+What are audit logs?,Container logs,API access logs,Node logs,,B
+What is a cloud-native application?,An on-premise application,An app designed to fully leverage cloud features,A monolithic VM-based app,,B
+What is the goal of cloud-native applications?,Reduce cost only,Scalability and resilience,Single deployment,,C
+Who introduced the 12 Factor App principles?,Google,Heroku developers,Amazon,,B
+What is the main goal of the 12 Factor App?,Security only,Portability and scalability,Hardware optimization,,B
+What does Single Codebase mean?,Multiple repos per service,All app-related files in one repo,No version control,,B
+How are dependencies handled in 12 Factor App?,Implicitly,Explicitly declared and isolated,OS-managed only,,B
+Where should configuration be stored?,In code,In environment variables,In binaries,,B
+Which Kubernetes objects help manage configuration?,Deployments only,ConfigMaps and Secrets,Ingress,,B
+What are backing services?,Internal libraries,Externally attached resources,Compiled binaries,,B
+"Why separate build, release and run?",Simplify code,Clear lifecycle stages,Reduce containers,,B
+Which tool is a Kubernetes package manager?,Kustomize,Docker,Helm,,C
+What are Helm charts?,Container images,Pre-configured Kubernetes resources,VM templates,,B
+How should processes be executed?,Stateful,Stateless,Single-threaded,,B
+Where should shared state be stored?,Inside containers,External services,Local filesystem,,B
+What does port binding imply?,Using Apache/Tomcat,Self-contained services,Static ports,,B
+How should scalability be achieved?,Vertical scaling,Horizontal scaling,Multithreading,,B
+Which Kubernetes tool scales pods horizontally?,ReplicaSet,HPA,DaemonSet,,B
+What does disposability mean?,No restarts allowed,Fast start and graceful shutdown,Long-lived pods,,B
+Which deployment strategies support disposability?,Big bang only,Rolling and Canary,Manual,,B
+Which strategies need Service Mesh?,Rolling update,A/B testing and Shadow,Recreate,,B
+What is Dev/Prod parity?,Different environments,Similar environments,Manual sync,,B
+What helps reduce Dev/Prod gaps?,Manual testing,CI/CD,SSH,,B
+Which CI/CD tools are Kubernetes-native?,Jenkins only,JenkinsX and ArgoCD,TravisCI,,B
+What is GitOps?,Manual ops,Git-based infrastructure automation,Monitoring system,,B
+Which is NOT an IaC approach?,Terraform,Ansible,SSH scripting,,C
+Which tools create local Kubernetes clusters?,EKS only,Minikube/MicroK8s/KIND,OpenStack,,B
+How should logs be treated?,Stored locally,As event streams on stdout,Ignored,,B
+What happens to logs after pod deletion?,Persist forever,Lost unless aggregated,Stored in etcd,,B
+Which tools collect logs as DaemonSets?,Fluentd/FluentBit,Kubectl,Helm,,A
+What is an admin process?,Long-running task,One-off management task,Sidecar,,B
+What problem do microservices solve?,Security only,Scalability and maintainability,Logging,,B
+How do microservices communicate?,Shared memory,Network calls,Files,,B
+What is east-west traffic?,Internet traffic,Internal service-to-service traffic,User traffic,,B
+What is a challenge of microservices?,Simple debugging,High east-west traffic,Low complexity,,B
+What problem does Service Mesh address?,VM scheduling,Service-to-service concerns,Storage,,B
+What is a sidecar in Service Mesh?,Main container,Proxy container,Init container,,B
+What is an API Gateway?,Centralized traffic manager,Container runtime,Ingress,,B
+How is Service Mesh different from API Gateway?,Centralized,Distributed per service,External only,,B
+Which component implements sidecars?,Istio,Envoy,Kubernetes,,B
+What is Envoy?,Container runtime,TCP proxy,Linux kernel,,B
+What is the cost of Service Mesh?,Zero overhead,20–30% CPU increase,Memory only,,B
+What is DevOps?,Separate teams,Unified dev and ops practices,Monitoring tool,,B
+What is Continuous Integration?,Manual merge,Frequent code integration and testing,Deployment only,,B
+What is Continuous Delivery?,Manual deploy,Automated release readiness,Autoscaling,,B
+What is Continuous Deployment?,Manual approval,Automatic production deploy,Build only,,B
+Is CI required for CD?,No,Yes,Optional,,B
+What is Infrastructure as Code?,Manual infra,Infra defined in code,VM snapshots,,B
+Why is IaC useful?,Less visibility,Version control and collaboration,Slower changes,,B
+What is GitOps source of truth?,Cloud provider,Git repository,API server,,B
+Which component applies GitOps changes?,Scheduler,Deployment tool,Ingress,,B
+What is an advantage of GitOps?,Manual rollback,Versioned infrastructure,No CI,,B
+What is a disadvantage of GitOps?,No security,Learning curve,No automation,,B
+What is declarative configuration?,Step-by-step instructions,Desired end state,System scripts,,B
+What is idempotency?,Multiple outcomes,Same result every time,Random behavior,,B
+Why declarative configs improve recovery?,Manual restore,Reapply desired state,Snapshots,,B
