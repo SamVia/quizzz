@@ -68,7 +68,7 @@ Why are VLANs not suitable for large datacenters?,They are unlimited,L2 is not s
 What technology is used instead of VLANs?,NAT,Tunneling,Load balancing,B
 What is DevStack?,Production OpenStack,A lightweight single-machine OpenStack,Container platform,B
 What is the purpose of the ML2 plugin?,VM scheduling,Support multiple L2 technologies,User authentication,B
-Which technologies can ML2 manage?,Only VLANs,VLANs, VXLAN, GRE, etc.,Only VXLAN,B
+Which technologies can ML2 manage?,Only VLANs,"VLANs, VXLAN, GRE, etc.",Only VXLAN,B
 Why does OpenStack use drivers in networking?,To manage hardware and software networks,To replace routers,To reduce latency,A
 Why is Kubernetes needed?,To replace VMs,To manage many containers manually,To orchestrate hundreds or thousands of containers,C
 What is the most widely used container orchestrator?,Docker Swarm,Mesos,Kubernetes,C
@@ -141,7 +141,7 @@ What is an APIServer aggregation used for?,Storage,Custom APIs routing,Networkin
 What are webhooks used for?,Storage validation,Mutating/validating requests,Scaling,B
 What is OPA?,Scheduler,Policy engine,Storage driver,B
 What do custom schedulers do?,Replace kubelet,Assign nodes to pods,Run containers,B
-What are CRI, CSI, CNI?,APIs for runtime, storage, network,Monitoring tools,Security layers,A
+What are CRI, CSI, CNI?,"APIs for runtime, storage, network",Monitoring tools,Security layers,A
 What is a finalizer?,Deletion blocker,Cleanup mechanism,Init container,B
 What are audit logs?,Container logs,API access logs,Node logs,B
 What is a cloud-native application?,An on-premise application,An app designed to fully leverage cloud features,A monolithic VM-based app,B
