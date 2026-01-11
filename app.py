@@ -101,8 +101,6 @@ def load_data(filename):
             if col in df.columns:
                 df[col] = df[col].astype(str)
         
-        # Mostra le colonne lette per debug
-        st.write("Colonne lette dal CSV:", df.columns.tolist())
         
         return df
     except Exception as e:
