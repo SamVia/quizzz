@@ -79,23 +79,56 @@ file_selezionato = mappa_quiz[scelta_utente]
 
 @st.cache_data
 def load_data(filename):
+    """
+    Carica un CSV di quiz in modo robusto:
+    - Gestisce UTF-8 BOM
+    - Forza separatore ','
+    - Rimuove spazi e caratteri invisibili dai nomi delle colonne
+    - Converte le opzioni in stringhe
+    """
     try:
-        df = pd.read_csv(filename, sep=None, engine='python')
+        # Legge il CSV con encoding UTF-8 BOM e separatore chiaro
+        df = pd.read_csv(filename, encoding='utf-8-sig', sep=',')
+        
+        # Rimuove spazi e BOM dai nomi delle colonne
+        df.columns = [c.strip().replace('\ufeff', '') for c in df.columns]
+        
+        # Riempie valori NaN con stringhe vuote
+        df = df.fillna("")
+        
+        # Forza tutte le colonne opzioni a stringa
+        for col in ['opzioneA', 'opzioneB', 'opzioneC', 'opzioneD']:
+            if col in df.columns:
+                df[col] = df[col].astype(str)
+        
+        # Mostra le colonne lette per debug
+        st.write("Colonne lette dal CSV:", df.columns.tolist())
+        
+        return df
+    except Exception as e:
+        st.error(f"Errore caricamento CSV: {e}")
+        return None
+
+#OLD_VERSION
+#@st.cache_data
+#def load_data(filename):
+ #   try:
+  #      df = pd.read_csv(filename, sep=None, engine='python')
         
         # 1. RIEMPI I VALORI VUOTI (NaN) CON STRINGHE VUOTE
-        df = df.fillna("")
+   #     df = df.fillna("")
         
         # 2. FORZA LA CONVERSIONE IN STRINGA DELLE COLONNE OPZIONI
         # Questo evita che numeri (es. "1") vengano letti come interi, o celle vuote come float
-        cols_opts = ['opzioneA', 'opzioneB', 'opzioneC', 'opzioneD']
-        for col in cols_opts:
-            if col in df.columns:
-                df[col] = df[col].astype(str)
+    #    cols_opts = ['opzioneA', 'opzioneB', 'opzioneC', 'opzioneD']
+     #   for col in cols_opts:
+      #      if col in df.columns:
+       #         df[col] = df[col].astype(str)
                 
-        return df
-    except Exception as e:
-        st.error(f"Errore caricamento: {e}")
-        return None
+        #return df
+    #except Exception as e:
+     #   st.error(f"Errore caricamento: {e}")
+      #  return None
 
 df = load_data(file_selezionato)
 
