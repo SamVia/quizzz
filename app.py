@@ -187,9 +187,13 @@ opts = st.session_state.opzioni_mix
 # MODIFICA QUI: Logica per convertire "A/B/C/D" nel testo della risposta
 # -------------------------------------------------------------------------
 soluzione_raw = str(q['soluzione']).strip()
-mappa_lettere = {'A': 'opzioneA', 'B': 'opzioneB', 'C': 'opzioneC', 'D': 'opzioneD'}
 
-# Se la soluzione è una lettera (es. "A"), prendiamo il testo dalla colonna opzioneA
+# Crea mappa dinamica solo con le colonne disponibili
+mappa_lettere = {'A': 'opzioneA', 'B': 'opzioneB', 'C': 'opzioneC'}
+if ha_opzioneD:
+    mappa_lettere['D'] = 'opzioneD'
+
+# Se la soluzione è una lettera (es. "A"), prendiamo il testo dalla colonna corrispondente
 if soluzione_raw.upper() in mappa_lettere:
     colonna_target = mappa_lettere[soluzione_raw.upper()]
     corretta = str(q[colonna_target]).strip()
