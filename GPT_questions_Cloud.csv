@@ -141,7 +141,7 @@ What is an APIServer aggregation used for?,Storage,Custom APIs routing,Networkin
 What are webhooks used for?,Storage validation,Mutating/validating requests,Scaling,B
 What is OPA?,Scheduler,Policy engine,Storage driver,B
 What do custom schedulers do?,Replace kubelet,Assign nodes to pods,Run containers,B
-What are CRI, CSI, CNI?,"APIs for runtime, storage, network",Monitoring tools,Security layers,A
+"What are CRI, CSI, CNI?","APIs for runtime, storage, network",Monitoring tools,Security layers,A
 What is a finalizer?,Deletion blocker,Cleanup mechanism,Init container,B
 What are audit logs?,Container logs,API access logs,Node logs,B
 What is a cloud-native application?,An on-premise application,An app designed to fully leverage cloud features,A monolithic VM-based app,B
@@ -153,7 +153,7 @@ How are dependencies handled in 12 Factor App?,Implicitly,Explicitly declared an
 Where should configuration be stored?,In code,In environment variables,In binaries,B
 Which Kubernetes objects help manage configuration?,Deployments only,ConfigMaps and Secrets,Ingress,B
 What are backing services?,Internal libraries,Externally attached resources,Compiled binaries,B
-Why separate build, release and run?,Simplify code,Clear lifecycle stages,Reduce containers,B
+"Why separate build, release and run?",Simplify code,Clear lifecycle stages,Reduce containers,B
 Which tool is a Kubernetes package manager?,Kustomize,Docker,Helm,C
 What are Helm charts?,Container images,Pre-configured Kubernetes resources,VM templates,B
 How should processes be executed?,Stateful,Stateless,Single-threaded,B
