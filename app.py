@@ -116,11 +116,14 @@ if 'quiz_df' not in st.session_state or st.session_state.get('current_quiz_name'
     # Forziamo il caricamento della prima domanda
     st.session_state.domanda_corrente = None
 
-# Verifica colonne minime (case insensitive per robustezza o standard)
-colonne_richieste = ['domanda', 'opzioneA', 'opzioneB', 'opzioneC', 'opzioneD', 'soluzione']
+# Verifica colonne minime
+colonne_richieste = ['domanda', 'opzioneA', 'opzioneB', 'opzioneC', 'soluzione']
 if not all(col in df.columns for col in colonne_richieste):
-    st.error(f"Il file {file_selezionato} non ha le colonne corrette ({colonne_richieste}).")
+    st.error(f"Il file {file_selezionato} non ha le colonne corrette (minimo: {colonne_richieste}).")
     st.stop()
+
+# Determina se il file ha 3 o 4 opzioni
+ha_opzioneD = 'opzioneD' in df.columns
 
 # --- 5. LOGICA QUIZ ---
 
@@ -140,8 +143,12 @@ def nuova_domanda():
     # Incrementiamo l'indice PER LA PROSSIMA VOLTA
     st.session_state.idx += 1
     
-    # ... Logica esistente per mescolare le opzioni ...
-    opts = [row['opzioneA'], row['opzioneB'], row['opzioneC'], row['opzioneD']]
+    # Costruisci le opzioni in base al numero di colonne disponibili
+    if ha_opzioneD:
+        opts = [row['opzioneA'], row['opzioneB'], row['opzioneC'], row['opzioneD']]
+    else:
+        opts = [row['opzioneA'], row['opzioneB'], row['opzioneC']]
+    
     random.shuffle(opts)
     
     st.session_state.domanda_corrente = row
@@ -243,11 +250,18 @@ st.markdown(f"### {q['domanda']}")
 c1, c2 = st.columns(2)
 disabilitato = (st.session_state.fase == 'verificato')
 
-# Rendering bottoni
-with c1: st.button(opts[0], key="b0", use_container_width=True, disabled=disabilitato, on_click=gestisci_click, args=(opts[0],))
-with c2: st.button(opts[1], key="b1", use_container_width=True, disabled=disabilitato, on_click=gestisci_click, args=(opts[1],))
-with c1: st.button(opts[2], key="b2", use_container_width=True, disabled=disabilitato, on_click=gestisci_click, args=(opts[2],))
-with c2: st.button(opts[3], key="b3", use_container_width=True, disabled=disabilitato, on_click=gestisci_click, args=(opts[3],))
+# Rendering bottoni: adatta il numero di bottoni al numero di opzioni
+if ha_opzioneD:
+    # 4 opzioni: griglia 2x2
+    with c1: st.button(opts[0] if opts[0] else "(vuoto)", key="b0", use_container_width=True, disabled=disabilitato, on_click=gestisci_click, args=(opts[0],))
+    with c2: st.button(opts[1] if opts[1] else "(vuoto)", key="b1", use_container_width=True, disabled=disabilitato, on_click=gestisci_click, args=(opts[1],))
+    with c1: st.button(opts[2] if opts[2] else "(vuoto)", key="b2", use_container_width=True, disabled=disabilitato, on_click=gestisci_click, args=(opts[2],))
+    with c2: st.button(opts[3] if opts[3] else "(vuoto)", key="b3", use_container_width=True, disabled=disabilitato, on_click=gestisci_click, args=(opts[3],))
+else:
+    # 3 opzioni: colonna singola
+    st.button(opts[0] if opts[0] else "(vuoto)", key="b0", use_container_width=True, disabled=disabilitato, on_click=gestisci_click, args=(opts[0],))
+    st.button(opts[1] if opts[1] else "(vuoto)", key="b1", use_container_width=True, disabled=disabilitato, on_click=gestisci_click, args=(opts[1],))
+    st.button(opts[2] if opts[2] else "(vuoto)", key="b2", use_container_width=True, disabled=disabilitato, on_click=gestisci_click, args=(opts[2],))
 
 st.write("---")
 
