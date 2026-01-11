@@ -6,6 +6,9 @@ import os
 # --- CONFIGURAZIONE ---
 st.set_page_config(page_title="Dynamic Quiz Loader", page_icon="🚽", layout="wide")
 
+# --- COSTANTI GLOBALI ---
+MAX_DOMANDE_ESAME = 33
+
 # --- 1. FUNZIONI UTILITY ---
 
 def crea_csv_esempio_se_mancano():
@@ -319,8 +322,6 @@ elif st.session_state.fase == 'selezione':
 # ==============================
 # 8. MODALITÀ ESAME (ADD-ON FIX)
 # ==============================
-
-MAX_DOMANDE_ESAME = 33
 
 # --- Stato esame ---
 if 'modalita_esame' not in st.session_state:
