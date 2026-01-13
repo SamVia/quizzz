@@ -49,7 +49,9 @@ def reset_quiz_state():
     st.session_state.fase = 'selezione'
     st.session_state.selezione_utente = None
     st.session_state.opzioni_mix = []
-
+# Reset contatore domande quando si cambia quiz
+    if 'domande_risposte_totali' in st.session_state:
+        st.session_state.domande_risposte_totali = 0
 # --- 3. SIDEBAR DINAMICA ---
 
 st.sidebar.title("Libreria Quiz")
