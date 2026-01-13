@@ -194,9 +194,9 @@ def nuova_domanda():
 def gestisci_click(risposta_cliccata):
     st.session_state.selezione_utente = risposta_cliccata
     st.session_state.fase = 'verificato'
-    
-    # Incrementa il contatore totale ogni volta che si risponde
-    st.session_state.domande_risposte_totali += 1
+     # Incrementa contatore solo se il quiz è caricato
+    if 'domande_risposte_totali' in st.session_state:
+        st.session_state.domande_risposte_totali += 1
 
 #modified
 # --- Reset flag quando si passa alla domanda successiva ---
@@ -296,7 +296,10 @@ st.markdown(css_style, unsafe_allow_html=True)
 
 st.title(f"{scelta_utente}") 
 
-st.write(f"📚 Domande viste: **{st.session_state.domande_risposte_totali}/{len(st.session_state.quiz_df)}**")
+# Contatore domande viste (solo se il quiz è caricato)
+if 'quiz_df' in st.session_state and 'domande_risposte_totali' in st.session_state:
+    st.write(f"📚 Domande viste: **{st.session_state.domande_risposte_totali}/{len(st.session_state.quiz_df)}**")
+
 
 st.markdown(f"### {q['domanda']}")
 
@@ -375,9 +378,10 @@ if 'risposta_gia_valutata' not in st.session_state:
     
 if 'salto_gia_contato' not in st.session_state:
     st.session_state.salto_gia_contato = False
-# Contatore domande risposte sul quiz corrente
-if 'domande_risposte_totali' not in st.session_state:
-    st.session_state.domande_risposte_totali = 0
+# Contatore domande risposte sul quiz corrente (solo se il quiz è caricato)
+if 'quiz_df' in st.session_state:
+    if 'domande_risposte_totali' not in st.session_state:
+        st.session_state.domande_risposte_totali = 0
 
 
 # --- Toggle sidebar ---
