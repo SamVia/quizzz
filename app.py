@@ -217,6 +217,10 @@ def avanza_domanda_esame():
     st.rerun()
 # added for exam mode
 def salta_domanda_esame():
+      # Incrementa contatore domande totali anche se si salta
+    if 'domande_risposte_totali' in st.session_state:
+        st.session_state.domande_risposte_totali += 1
+        
     if not st.session_state.salto_gia_contato:
         st.session_state.domande_esame_fatte += 1
         st.session_state.salto_gia_contato = True
@@ -349,6 +353,9 @@ if st.session_state.fase == 'verificato':
 
 elif st.session_state.fase == 'selezione':
     if st.button("Salta Domanda", use_container_width=True):
+         # Incrementa contatore domande totali anche se si salta
+        if 'domande_risposte_totali' in st.session_state:
+            st.session_state.domande_risposte_totali += 1
         if st.session_state.modalita_esame:
             salta_domanda_esame()
         else:
