@@ -22,7 +22,7 @@ def crea_csv_esempio_se_mancano():
             'opzioneB': ['2', 'Blu'],
             'opzioneC': ['3', 'Giallo'],
             'opzioneD': ['4', 'Viola'],
-            'soluzione': ['B', 'B'], # Esempio con lettere
+            'soluzione': ['B', 'B'], 
             'motivazione': ['Matematica base.', 'Rayleigh scattering.']
         }
         pd.DataFrame(data_demo).to_csv('Quiz_Demo.csv', index=False)
@@ -35,7 +35,6 @@ def get_lista_quiz():
     mappa_quiz = {}
     
     for f in files:
-        # Rimuove l'estensione .csv e sostituisce gli underscore con spazi
         nome_pulito = f.replace('.csv', '').replace('_', ' ').title()
         mappa_quiz[nome_pulito] = f
         
@@ -49,86 +48,51 @@ def reset_quiz_state():
     st.session_state.fase = 'selezione'
     st.session_state.selezione_utente = None
     st.session_state.opzioni_mix = []
-# Reset contatore domande quando si cambia quiz
+    # Reset contatore domande quando si cambia quiz
     if 'domande_risposte_totali' in st.session_state:
         st.session_state.domande_risposte_totali = 0
+
 # --- 3. SIDEBAR DINAMICA ---
 
 st.sidebar.title("Libreria Quiz")
 st.sidebar.write("Seleziona un argomento:")
 
-# Recuperiamo la lista dei file
 mappa_quiz = get_lista_quiz()
 
 if not mappa_quiz:
     st.error("Nessun file CSV trovato nella cartella!")
     st.stop()
 
-# Menu di scelta
 titoli_disponibili = list(mappa_quiz.keys())
 scelta_utente = st.sidebar.radio(
-    "Argomenti:", # Label nascosta o breve
+    "Argomenti:", 
     titoli_disponibili,
     on_change=reset_quiz_state 
 )
 
-# Recuperiamo il nome del file reale
 file_selezionato = mappa_quiz[scelta_utente]
-
-# --- 4. CARICAMENTO DATI ---
 
 # --- 4. CARICAMENTO DATI ---
 
 @st.cache_data
 def load_data(filename):
     """
-    Carica un CSV di quiz in modo robusto:
-    - Gestisce UTF-8 BOM
-    - Forza separatore ','
-    - Rimuove spazi e caratteri invisibili dai nomi delle colonne
-    - Converte le opzioni in stringhe
+    Carica un CSV di quiz in modo robusto.
     """
     try:
-        # Legge il CSV con encoding UTF-8 BOM e separatore chiaro
         df = pd.read_csv(filename, encoding='utf-8-sig', sep=',')
-        
-        # Rimuove spazi e BOM dai nomi delle colonne
+        # Pulisce nomi colonne
         df.columns = [c.strip().replace('\ufeff', '') for c in df.columns]
-        
-        # Riempie valori NaN con stringhe vuote
+        # NaN -> stringa vuota
         df = df.fillna("")
-        
-        # Forza tutte le colonne opzioni a stringa
+        # Forza stringhe
         for col in ['opzioneA', 'opzioneB', 'opzioneC', 'opzioneD']:
             if col in df.columns:
                 df[col] = df[col].astype(str)
-        
-        
         return df
     except Exception as e:
         st.error(f"Errore caricamento CSV: {e}")
         return None
-
-#OLD_VERSION
-#@st.cache_data
-#def load_data(filename):
- #   try:
-  #      df = pd.read_csv(filename, sep=None, engine='python')
-        
-        # 1. RIEMPI I VALORI VUOTI (NaN) CON STRINGHE VUOTE
-   #     df = df.fillna("")
-        
-        # 2. FORZA LA CONVERSIONE IN STRINGA DELLE COLONNE OPZIONI
-        # Questo evita che numeri (es. "1") vengano letti come interi, o celle vuote come float
-    #    cols_opts = ['opzioneA', 'opzioneB', 'opzioneC', 'opzioneD']
-     #   for col in cols_opts:
-      #      if col in df.columns:
-       #         df[col] = df[col].astype(str)
-                
-        #return df
-    #except Exception as e:
-     #   st.error(f"Errore caricamento: {e}")
-      #  return None
 
 df = load_data(file_selezionato)
 
@@ -137,28 +101,17 @@ if df is None:
     st.stop()
 
 if 'quiz_df' not in st.session_state or st.session_state.get('current_quiz_name') != scelta_utente:
-    # 1. Salviamo il nome del quiz corrente per capire se l'utente cambia argomento
     st.session_state.current_quiz_name = scelta_utente
-    
-    # 2. Mescoliamo il dataframe UNA VOLTA SOLA e lo salviamo nello stato
-    # .sample(frac=1) è il modo pandas per mescolare le righe
     st.session_state.quiz_df = df.sample(frac=1).reset_index(drop=True)
-    
-    # 3. Resettiamo l'indice
     st.session_state.idx = 0
-    
-    # 4. Resettiamo lo stato della domanda (importante per pulire la UI)
     reset_quiz_state()
-    # Forziamo il caricamento della prima domanda
     st.session_state.domanda_corrente = None
 
-# Verifica colonne minime
 colonne_richieste = ['domanda', 'opzioneA', 'opzioneB', 'opzioneC', 'soluzione']
 if not all(col in df.columns for col in colonne_richieste):
     st.error(f"Il file {file_selezionato} non ha le colonne corrette (minimo: {colonne_richieste}).")
     st.stop()
 
-# Determina se il file ha 3 o 4 opzioni
 ha_opzioneD = 'opzioneD' in df.columns
 
 # --- 5. LOGICA QUIZ ---
@@ -167,19 +120,13 @@ if 'domanda_corrente' not in st.session_state:
     reset_quiz_state()
 
 def nuova_domanda():
-    # Controlliamo se abbiamo finito le domande
     if st.session_state.idx >= len(st.session_state.quiz_df):
         st.warning("Hai completato tutte le domande di questo quiz!")
-        st.stop() # O logica per ricominciare
-        return
+        st.stop()
 
-    # Recuperiamo la riga corrente usando l'indice salvato
     row = st.session_state.quiz_df.iloc[st.session_state.idx]
-    
-    # Incrementiamo l'indice PER LA PROSSIMA VOLTA
     st.session_state.idx += 1
     
-    # Costruisci le opzioni in base al numero di colonne disponibili
     if ha_opzioneD:
         opts = [row['opzioneA'], row['opzioneB'], row['opzioneC'], row['opzioneD']]
     else:
@@ -192,18 +139,13 @@ def nuova_domanda():
     st.session_state.selezione_utente = None
     st.session_state.fase = 'selezione'
 
-# Callback click istantaneo
 def gestisci_click(risposta_cliccata):
     st.session_state.selezione_utente = risposta_cliccata
     st.session_state.fase = 'verificato'
-     # Incrementa contatore solo se il quiz è caricato
     if 'domande_risposte_totali' in st.session_state:
         st.session_state.domande_risposte_totali += 1
 
-#modified
-# --- Reset flag quando si passa alla domanda successiva ---
 def avanza_domanda_esame():
-    # Se l'esame è già finito, ricomincia da capo
     if st.session_state.domande_esame_fatte >= MAX_DOMANDE_ESAME:
         st.session_state.punteggio = 0.0
         st.session_state.domande_esame_fatte = 0
@@ -215,9 +157,8 @@ def avanza_domanda_esame():
     st.session_state.risposta_gia_valutata = False
     nuova_domanda()
     st.rerun()
-# added for exam mode
+
 def salta_domanda_esame():
-      # Incrementa contatore domande totali anche se si salta
     if 'domande_risposte_totali' in st.session_state:
         st.session_state.domande_risposte_totali += 1
         
@@ -236,34 +177,29 @@ if st.session_state.domanda_corrente is None:
 q = st.session_state.domanda_corrente
 opts = st.session_state.opzioni_mix
 
-# -------------------------------------------------------------------------
-# MODIFICA QUI: Logica per convertire "A/B/C/D" nel testo della risposta
-# -------------------------------------------------------------------------
+# -- Calcolo risposta corretta --
 soluzione_raw = str(q['soluzione']).strip()
-
-# Crea mappa dinamica solo con le colonne disponibili
 mappa_lettere = {'A': 'opzioneA', 'B': 'opzioneB', 'C': 'opzioneC'}
 if ha_opzioneD:
     mappa_lettere['D'] = 'opzioneD'
 
-# Se la soluzione è una lettera (es. "A"), prendiamo il testo dalla colonna corrispondente
 if soluzione_raw.upper() in mappa_lettere:
     colonna_target = mappa_lettere[soluzione_raw.upper()]
     corretta = str(q[colonna_target]).strip()
 else:
-    # Altrimenti assumiamo che la soluzione sia già il testo completo
     corretta = soluzione_raw
-# -------------------------------------------------------------------------
 
 motivazione = q['motivazione'] if 'motivazione' in df.columns else ""
 
 # --- 6. CSS STILE E COLORI ---
+# Nota: Ho aggiunto margin-bottom al bottone per allinearlo ai box HTML
 css_style = """
 <style>
 div.stButton > button {
     height: 85px; width: 100%; font-size: 19px; border-radius: 12px;
     font-weight: 600; transition: all 0.2s ease-in-out;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-bottom: 10px;
 }
 div.stButton > button:hover {
     transform: translateY(-2px);
@@ -277,71 +213,86 @@ st.markdown(css_style, unsafe_allow_html=True)
 
 st.title(f"{scelta_utente}") 
 
-# Contatore domande viste (solo se il quiz è caricato)
 if 'quiz_df' in st.session_state and 'domande_risposte_totali' in st.session_state:
     st.write(f"📚 Domande viste: **{st.session_state.domande_risposte_totali}/{len(st.session_state.quiz_df)}**")
-
 
 st.markdown(f"### {q['domanda']}")
 
 c1, c2 = st.columns(2)
-disabilitato = (st.session_state.fase == 'verificato')
 
-# Helper function to render button with color feedback
+# --- FUNZIONE DI RENDERING BOTTONI (CORRETTA) ---
 def render_button_with_feedback(option_text, key, col):
     selezione = str(st.session_state.selezione_utente).strip()
     val_opt = str(option_text).strip()
-    val_corr = corretta
+    val_corr = str(corretta).strip()
     
-    # Determine button styling
+    # 1. SE ABBIAMO GIÀ RISPOSTO -> MOSTRA HTML COLORATO
     if st.session_state.fase == 'verificato':
         if val_opt == val_corr:
-            # Correct answer - GREEN
-            btn_color = "green"
-            disabled = True
-        elif val_opt == selezione and selezione != val_corr:
-            # Wrong answer selected - RED
-            btn_color = "red"
-            disabled = True
+            # VERDE (Corretta)
+            border_c = "#28a745"
+            bg_c = "rgba(40, 167, 69, 0.2)"
+            text_c = "#155724"
+        elif val_opt == selezione:
+            # ROSSO (Sbagliata)
+            border_c = "#dc3545"
+            bg_c = "rgba(220, 53, 69, 0.2)"
+            text_c = "#721c24"
         else:
-            # Other options - GRAY
-            btn_color = "gray"
-            disabled = True
-    else:
-        btn_color = None
-        disabled = False
-    
-    with col:
-        st.button(
-            option_text if option_text else "(vuoto)",
-            key=key,
-            use_container_width=True,
-            disabled=disabled or disabilitato,
-            on_click=gestisci_click if st.session_state.fase == 'selezione' else None,
-            args=(option_text,) if st.session_state.fase == 'selezione' else (),
-            help=None,
-            type="secondary" if btn_color == "gray" else "primary" if btn_color in ["green", "red"] else "secondary"
-        )
+            # GRIGIO (Le altre)
+            border_c = "#e9ecef"
+            bg_c = "rgba(233, 236, 239, 0.4)"
+            text_c = "#6c757d"
 
-# Rendering bottoni: adatta il numero di bottoni al numero di opzioni
+        col.markdown(f"""
+        <div style="
+            height: 85px; 
+            width: 100%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            border: 2px solid {border_c}; 
+            background-color: {bg_c}; 
+            color: {text_c};
+            border-radius: 12px; 
+            font-weight: 600; 
+            font-size: 19px; 
+            margin-bottom: 10px;
+            padding: 5px;
+            text-align: center;
+            line-height: 1.2;
+        ">
+            {val_opt}
+        </div>
+        """, unsafe_allow_html=True)
+
+    # 2. SE DOBBIAMO ANCORA RISPONDERE -> MOSTRA BOTTONE CLICCABILE
+    else:
+        with col:
+            st.button(
+                option_text if option_text else "(vuoto)",
+                key=key,
+                use_container_width=True,
+                on_click=gestisci_click,
+                args=(option_text,)
+            )
+
+# Rendering griglia
 if ha_opzioneD:
-    # 4 opzioni: griglia 2x2
     render_button_with_feedback(opts[0], "b0", c1)
     render_button_with_feedback(opts[1], "b1", c2)
     render_button_with_feedback(opts[2], "b2", c1)
     render_button_with_feedback(opts[3], "b3", c2)
 else:
-    # 3 opzioni: colonna singola
     render_button_with_feedback(opts[0], "b0", st)
     render_button_with_feedback(opts[1], "b1", st)
     render_button_with_feedback(opts[2], "b2", st)
 
 st.write("---")
 
-# Area Feedback
+# --- Feedback & Navigazione ---
 
 if st.session_state.fase == 'verificato':
-
     sel_utente = str(st.session_state.selezione_utente).strip()
     
     if motivazione and str(motivazione) != "nan":
@@ -353,14 +304,9 @@ if st.session_state.fase == 'verificato':
         else:
             nuova_domanda()
             st.rerun()
-#old VERSION
-    #if st.button("PROSSIMA DOMANDA", type="primary", use_container_width=True):
-     #   nuova_domanda()
-      #  st.rerun()
 
 elif st.session_state.fase == 'selezione':
     if st.button("Salta Domanda", use_container_width=True):
-         # Incrementa contatore domande totali anche se si salta
         if 'domande_risposte_totali' in st.session_state:
             st.session_state.domande_risposte_totali += 1
         if st.session_state.modalita_esame:
@@ -369,45 +315,30 @@ elif st.session_state.fase == 'selezione':
             nuova_domanda()
             st.rerun()
 
-#old Version
-#elif st.session_state.fase == 'selezione':
- #   if st.button("Salta Domanda", use_container_width=True):
-  #      nuova_domanda()
-   #     st.rerun()
-    
 # ==============================
-# 8. MODALITÀ ESAME (ADD-ON FIX)
+# 8. MODALITÀ ESAME
 # ==============================
 
-# --- Stato esame ---
 if 'modalita_esame' not in st.session_state:
     st.session_state.modalita_esame = False
-
 if 'punteggio' not in st.session_state:
     st.session_state.punteggio = 0.0
-
 if 'domande_esame_fatte' not in st.session_state:
     st.session_state.domande_esame_fatte = 0
-
 if 'risposta_gia_valutata' not in st.session_state:
     st.session_state.risposta_gia_valutata = False
-    
 if 'salto_gia_contato' not in st.session_state:
     st.session_state.salto_gia_contato = False
-# Contatore domande risposte sul quiz corrente (solo se il quiz è caricato)
 if 'quiz_df' in st.session_state:
     if 'domande_risposte_totali' not in st.session_state:
         st.session_state.domande_risposte_totali = 0
 
-
-# --- Toggle sidebar ---
 st.sidebar.markdown("---")
 st.session_state.modalita_esame = st.sidebar.checkbox(
     "📝 Modalità ESAME (33 domande)",
     value=st.session_state.modalita_esame
 )
 
-# --- Mostra stato esame ---
 if st.session_state.modalita_esame:
     progress_value = min(st.session_state.domande_esame_fatte / MAX_DOMANDE_ESAME, 1.0)
     st.progress(progress_value)
@@ -416,7 +347,7 @@ if st.session_state.modalita_esame:
         f"🎯 **Punteggio:** {round(st.session_state.punteggio, 2)}"
     )
 
-# --- Calcolo punteggio (IMMEDIATO) ---
+# Calcolo Punteggio
 if (
     st.session_state.modalita_esame
     and st.session_state.fase == 'verificato'
@@ -430,7 +361,7 @@ if (
     st.session_state.domande_esame_fatte += 1
     st.session_state.risposta_gia_valutata = True
     
-# --- Fine esame ---
+# Fine Esame
 if (
     st.session_state.modalita_esame
     and st.session_state.domande_esame_fatte >= MAX_DOMANDE_ESAME
@@ -452,5 +383,3 @@ if (
         st.session_state.idx = 0
         reset_quiz_state()
         st.rerun()
-
-    st.stop()
