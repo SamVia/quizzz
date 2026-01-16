@@ -269,33 +269,8 @@ div.stButton > button:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 8px rgba(0,0,0,0.15);
 }
+</style>
 """
-
-if st.session_state.fase == 'verificato':
-    posizioni = {
-        0: "div[data-testid='column']:nth-of-type(1) div.stButton:nth-of-type(1) button",
-        1: "div[data-testid='column']:nth-of-type(2) div.stButton:nth-of-type(1) button",
-        2: "div[data-testid='column']:nth-of-type(1) div.stButton:nth-of-type(2) button",
-        3: "div[data-testid='column']:nth-of-type(2) div.stButton:nth-of-type(2) button"
-    }
-    selezione = str(st.session_state.selezione_utente).strip()
-    
-    for i, opt in enumerate(opts):
-        selector = posizioni[i]
-        val_opt = str(opt).strip()
-        val_corr = corretta # Ora contiene il testo completo, non "A" o "B"
-        
-        if val_opt == val_corr:
-            # VERDE (Corretta)
-            css_style += f"{selector} {{ background-color: #d1e7dd !important; border: 2px solid #198754 !important; color: #0f5132 !important; opacity: 1 !important; }}"
-        elif val_opt == selezione and selezione != val_corr:
-            # ROSSO (Errore utente)
-            css_style += f"{selector} {{ background-color: #f8d7da !important; border: 2px solid #dc3545 !important; color: #842029 !important; opacity: 1 !important; }}"
-        else:
-            # FADE (Altre opzioni)
-            css_style += f"{selector} {{ opacity: 0.5 !important; filter: grayscale(80%); }}"
-
-css_style += "</style>"
 st.markdown(css_style, unsafe_allow_html=True)
 
 # --- 7. INTERFACCIA UI ---
@@ -312,29 +287,60 @@ st.markdown(f"### {q['domanda']}")
 c1, c2 = st.columns(2)
 disabilitato = (st.session_state.fase == 'verificato')
 
+# Helper function to render button with color feedback
+def render_button_with_feedback(option_text, key, col):
+    selezione = str(st.session_state.selezione_utente).strip()
+    val_opt = str(option_text).strip()
+    val_corr = corretta
+    
+    # Determine button styling
+    if st.session_state.fase == 'verificato':
+        if val_opt == val_corr:
+            # Correct answer - GREEN
+            btn_color = "green"
+            disabled = True
+        elif val_opt == selezione and selezione != val_corr:
+            # Wrong answer selected - RED
+            btn_color = "red"
+            disabled = True
+        else:
+            # Other options - GRAY
+            btn_color = "gray"
+            disabled = True
+    else:
+        btn_color = None
+        disabled = False
+    
+    with col:
+        st.button(
+            option_text if option_text else "(vuoto)",
+            key=key,
+            use_container_width=True,
+            disabled=disabled or disabilitato,
+            on_click=gestisci_click if st.session_state.fase == 'selezione' else None,
+            args=(option_text,) if st.session_state.fase == 'selezione' else (),
+            help=None,
+            type="secondary" if btn_color == "gray" else "primary" if btn_color in ["green", "red"] else "secondary"
+        )
+
 # Rendering bottoni: adatta il numero di bottoni al numero di opzioni
 if ha_opzioneD:
     # 4 opzioni: griglia 2x2
-    with c1: st.button(opts[0] if opts[0] else "(vuoto)", key="b0", use_container_width=True, disabled=disabilitato, on_click=gestisci_click, args=(opts[0],))
-    with c2: st.button(opts[1] if opts[1] else "(vuoto)", key="b1", use_container_width=True, disabled=disabilitato, on_click=gestisci_click, args=(opts[1],))
-    with c1: st.button(opts[2] if opts[2] else "(vuoto)", key="b2", use_container_width=True, disabled=disabilitato, on_click=gestisci_click, args=(opts[2],))
-    with c2: st.button(opts[3] if opts[3] else "(vuoto)", key="b3", use_container_width=True, disabled=disabilitato, on_click=gestisci_click, args=(opts[3],))
+    render_button_with_feedback(opts[0], "b0", c1)
+    render_button_with_feedback(opts[1], "b1", c2)
+    render_button_with_feedback(opts[2], "b2", c1)
+    render_button_with_feedback(opts[3], "b3", c2)
 else:
     # 3 opzioni: colonna singola
-    st.button(opts[0] if opts[0] else "(vuoto)", key="b0", use_container_width=True, disabled=disabilitato, on_click=gestisci_click, args=(opts[0],))
-    st.button(opts[1] if opts[1] else "(vuoto)", key="b1", use_container_width=True, disabled=disabilitato, on_click=gestisci_click, args=(opts[1],))
-    st.button(opts[2] if opts[2] else "(vuoto)", key="b2", use_container_width=True, disabled=disabilitato, on_click=gestisci_click, args=(opts[2],))
+    render_button_with_feedback(opts[0], "b0", st)
+    render_button_with_feedback(opts[1], "b1", st)
+    render_button_with_feedback(opts[2], "b2", st)
 
 st.write("---")
 
 # Area Feedback
 if st.session_state.fase == 'verificato':
     sel_utente = str(st.session_state.selezione_utente).strip()
-    
-    if sel_utente == corretta:
-        st.success("**Risposta Esatta!**")
-    else:
-        st.error(f"**Sbagliato!** La risposta giusta era: **{corretta}**")
     
     if motivazione and str(motivazione) != "nan":
         st.info(f"**Motivazione:**\n\n{motivazione}")
