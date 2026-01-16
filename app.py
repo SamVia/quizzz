@@ -332,12 +332,12 @@ st.write("---")
 if st.session_state.fase == 'verificato':
 
     sel_utente = str(st.session_state.selezione_utente).strip()
-    '''    
-    if sel_utente == corretta:
-        st.success("**Risposta Esatta!**")
-    else:
-        st.error(f"**Sbagliato!** La risposta giusta era: **{corretta}**")
-    '''
+       
+    #if sel_utente == corretta:
+     #   st.success("**Risposta Esatta!**")
+    #else:
+     #   st.error(f"**Sbagliato!** La risposta giusta era: **{corretta}**")
+    
     if motivazione and str(motivazione) != "nan":
         st.info(f"**Motivazione:**\n\n{motivazione}")
 
