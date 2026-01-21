@@ -133,19 +133,25 @@ def load_data(filename):
         st.error(f"Errore caricamento CSV: {e}")
         return None
 
-if st.session_state.practice_mode and st.session_state.wrong_answers:
+def load_practice_data():
+    """Carica i dati per la modalità pratica dalle risposte sbagliate."""
+    if st.session_state.wrong_answers:
+        df_practice = pd.DataFrame(st.session_state.wrong_answers)
+        if len(df_practice) > 0:
+            # Rimuovi la colonna original_index se esiste
+            if 'original_index' in df_practice.columns:
+                df_practice = df_practice.drop(columns=['original_index'])
+            return df_practice.sample(frac=1).reset_index(drop=True)
+    return None
+
+if st.session_state.practice_mode:
     # Pratica modalità: usa solo risposte sbagliate
-    df_practice = pd.DataFrame(st.session_state.wrong_answers)
-    if len(df_practice) > 0:
-        # Rimuovi la colonna original_index se esiste
-        if 'original_index' in df_practice.columns:
-            df_practice = df_practice.drop(columns=['original_index'])
-        df = df_practice.sample(frac=1).reset_index(drop=True)
-    else:
+    df = load_practice_data()
+    if df is None:
         df = load_data(file_selezionato)
+        st.session_state.practice_mode = False
 else:
     df = load_data(file_selezionato)
-    st.session_state.practice_mode = False
 
 if df is None:
     st.error(f"Errore nella lettura del file {file_selezionato}.")
