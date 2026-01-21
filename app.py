@@ -47,6 +47,10 @@ if 'wrong_answers' not in st.session_state:
     st.session_state.wrong_answers = []
 if 'practice_mode' not in st.session_state:
     st.session_state.practice_mode = False
+if 'correct_count' not in st.session_state:
+    st.session_state.correct_count = 0
+if 'wrong_count' not in st.session_state:
+    st.session_state.wrong_count = 0
 
 def reset_quiz_state():
     """Resetta completamente lo stato quando si cambia quiz."""
@@ -57,6 +61,8 @@ def reset_quiz_state():
     # Reset contatore domande quando si cambia quiz
     if 'domande_risposte_totali' in st.session_state:
         st.session_state.domande_risposte_totali = 0
+    st.session_state.correct_count = 0
+    st.session_state.wrong_count = 0
 
 def reset_wrong_answers():
     """Resetta la lista delle risposte sbagliate."""
@@ -195,6 +201,9 @@ def track_wrong_answer():
             wrong_item = st.session_state.domanda_corrente.to_dict()
             wrong_item['original_index'] = current_q_index
             st.session_state.wrong_answers.append(wrong_item)
+        st.session_state.wrong_count += 1
+    else:
+        st.session_state.correct_count += 1
 
 def remove_correct_from_wrong_list():
     """Rimuove una domanda dalla lista di risposte sbagliate se risposta correttamente."""
@@ -205,6 +214,9 @@ def remove_correct_from_wrong_list():
             item for item in st.session_state.wrong_answers
             if item.get('domanda') != current_q.get('domanda')
         ]
+        st.session_state.correct_count += 1
+    elif st.session_state.practice_mode and st.session_state.selezione_utente != corretta:
+        st.session_state.wrong_count += 1
 
 def avanza_domanda_esame():
     if st.session_state.domande_esame_fatte >= MAX_DOMANDE_ESAME:
@@ -275,7 +287,26 @@ st.markdown(css_style, unsafe_allow_html=True)
 st.title(f"🔄 Pratica - {scelta_utente}" if st.session_state.practice_mode else f"{scelta_utente}") 
 
 if 'quiz_df' in st.session_state and 'domande_risposte_totali' in st.session_state:
-    st.write(f"📚 Domande viste: **{st.session_state.domande_risposte_totali}/{len(st.session_state.quiz_df)}**")
+    total_seen = st.session_state.domande_risposte_totali
+    total_questions = len(st.session_state.quiz_df)
+    correct = st.session_state.correct_count
+    wrong = st.session_state.wrong_count
+    skipped = total_seen - correct - wrong
+    
+    # Calcola il voto stimato su 33
+    if total_seen > 0:
+        score_per_question = (correct - (wrong * 0.33)) / total_seen
+        estimated_grade = score_per_question * MAX_DOMANDE_ESAME
+    else:
+        estimated_grade = 0
+    
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.write(f"📚 Domande viste: **{total_seen}/{total_questions}**")
+    with col2:
+        st.write(f"✅ Giuste: **{correct}** | ❌ Sbagliate: **{wrong}**")
+    with col3:
+        st.write(f"📊 Voto stimato: **{estimated_grade:.2f}/33**")
 
 st.markdown(f"### {q['domanda']}")
 
