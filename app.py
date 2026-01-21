@@ -52,6 +52,11 @@ def reset_quiz_state():
     if 'domande_risposte_totali' in st.session_state:
         st.session_state.domande_risposte_totali = 0
 
+def reset_wrong_answers():
+    """Resetta la lista delle risposte sbagliate."""
+    st.session_state.wrong_answers = []
+    st.session_state.practice_mode = False
+
 # --- 3. SIDEBAR DINAMICA ---
 
 st.sidebar.title("Libreria Quiz")
@@ -69,6 +74,17 @@ scelta_utente = st.sidebar.radio(
     titoli_disponibili,
     on_change=reset_quiz_state 
 )
+
+# --- PRACTICE MODE TOGGLE ---
+st.sidebar.markdown("---")
+if st.session_state.wrong_answers:
+    st.sidebar.write(f"❌ Risposte sbagliate: **{len(st.session_state.wrong_answers)}**")
+    if st.sidebar.button("🔄 Pratica Risposte Sbagliate", use_container_width=True):
+        st.session_state.practice_mode = True
+        st.session_state.idx = 0
+        st.session_state.domanda_corrente = None
+        reset_quiz_state()
+        st.rerun()
 
 file_selezionato = mappa_quiz[scelta_utente]
 
@@ -94,7 +110,19 @@ def load_data(filename):
         st.error(f"Errore caricamento CSV: {e}")
         return None
 
-df = load_data(file_selezionato)
+if st.session_state.practice_mode and st.session_state.wrong_answers:
+    # Pratica modalità: usa solo risposte sbagliate
+    df_practice = pd.DataFrame(st.session_state.wrong_answers)
+    if len(df_practice) > 0:
+        # Rimuovi la colonna original_index se esiste
+        if 'original_index' in df_practice.columns:
+            df_practice = df_practice.drop(columns=['original_index'])
+        df = df_practice.sample(frac=1).reset_index(drop=True)
+    else:
+        df = load_data(file_selezionato)
+else:
+    df = load_data(file_selezionato)
+    st.session_state.practice_mode = False
 
 if df is None:
     st.error(f"Errore nella lettura del file {file_selezionato}.")
@@ -106,6 +134,12 @@ if 'quiz_df' not in st.session_state or st.session_state.get('current_quiz_name'
     st.session_state.idx = 0
     reset_quiz_state()
     st.session_state.domanda_corrente = None
+    reset_wrong_answers()
+
+if 'wrong_answers' not in st.session_state:
+    st.session_state.wrong_answers = []
+if 'practice_mode' not in st.session_state:
+    st.session_state.practice_mode = False
 
 colonne_richieste = ['domanda', 'opzioneA', 'opzioneB', 'opzioneC', 'soluzione']
 if not all(col in df.columns for col in colonne_richieste):
@@ -144,6 +178,16 @@ def gestisci_click(risposta_cliccata):
     st.session_state.fase = 'verificato'
     if 'domande_risposte_totali' in st.session_state:
         st.session_state.domande_risposte_totali += 1
+
+def track_wrong_answer():
+    """Traccia una risposta sbagliata aggiungendola alla lista."""
+    if st.session_state.selezione_utente != corretta:
+        # Aggiungi solo se non è già stato tracciato per questa domanda
+        current_q_index = st.session_state.idx - 1
+        if current_q_index not in [item.get('original_index', -1) for item in st.session_state.wrong_answers]:
+            wrong_item = st.session_state.domanda_corrente.to_dict()
+            wrong_item['original_index'] = current_q_index
+            st.session_state.wrong_answers.append(wrong_item)
 
 def avanza_domanda_esame():
     if st.session_state.domande_esame_fatte >= MAX_DOMANDE_ESAME:
@@ -211,7 +255,7 @@ st.markdown(css_style, unsafe_allow_html=True)
 
 # --- 7. INTERFACCIA UI ---
 
-st.title(f"{scelta_utente}") 
+st.title(f"🔄 Pratica - {scelta_utente}" if st.session_state.practice_mode else f"{scelta_utente}") 
 
 if 'quiz_df' in st.session_state and 'domande_risposte_totali' in st.session_state:
     st.write(f"📚 Domande viste: **{st.session_state.domande_risposte_totali}/{len(st.session_state.quiz_df)}**")
@@ -295,11 +339,26 @@ st.write("---")
 if st.session_state.fase == 'verificato':
     sel_utente = str(st.session_state.selezione_utente).strip()
     
+    # Traccia la risposta sbagliata se non siamo in pratica
+    if not st.session_state.practice_mode:
+        track_wrong_answer()
+    
     if motivazione and str(motivazione) != "nan":
         st.info(f"**Motivazione:**\n\n{motivazione}")
 
     if st.button("PROSSIMA DOMANDA", type="primary", use_container_width=True):
-        if st.session_state.modalita_esame:
+        if st.session_state.practice_mode:
+            # Se siamo in pratica, torna alla modalità normale quando finisci
+            if st.session_state.idx >= len(st.session_state.quiz_df):
+                st.session_state.practice_mode = False
+                st.session_state.idx = 0
+                reset_quiz_state()
+                st.success("✅ Hai completato la pratica delle risposte sbagliate!")
+                st.rerun()
+            else:
+                nuova_domanda()
+                st.rerun()
+        elif st.session_state.modalita_esame:
             avanza_domanda_esame()
         else:
             nuova_domanda()
