@@ -97,6 +97,7 @@ if st.session_state.wrong_answers or st.session_state.practice_mode:
         st.sidebar.write(f"❌ Risposte sbagliate: **{len(st.session_state.wrong_answers)}**")
     col1, col2 = st.sidebar.columns(2)
     with col1:
+        # Toggle logic handles the rerun
         if st.button("🔄 Pratica" if not st.session_state.practice_mode else "⏸️ Esci Pratica", use_container_width=True):
             st.session_state.practice_mode = not st.session_state.practice_mode
             st.session_state.idx = 0
@@ -157,6 +158,8 @@ if df is None:
     st.error(f"Errore nella lettura del file {file_selezionato}.")
     st.stop()
 
+# --- FIX APPLICATO QUI ---
+# Abbiamo rimosso la logica che resettava le wrong_answers quando practice_mode era True
 if 'quiz_df' not in st.session_state or st.session_state.get('current_quiz_name') != scelta_utente or st.session_state.get('last_practice_mode') != st.session_state.practice_mode:
     st.session_state.current_quiz_name = scelta_utente
     st.session_state.last_practice_mode = st.session_state.practice_mode
@@ -164,8 +167,10 @@ if 'quiz_df' not in st.session_state or st.session_state.get('current_quiz_name'
     st.session_state.idx = 0
     reset_quiz_state()
     st.session_state.domanda_corrente = None
-    if st.session_state.practice_mode:
-        reset_wrong_answers()
+    
+    # !!! HO RIMOSSO QUESTE LINEE !!!
+    # if st.session_state.practice_mode:
+    #    reset_wrong_answers()
 
 colonne_richieste = ['domanda', 'opzioneA', 'opzioneB', 'opzioneC', 'soluzione']
 if not all(col in df.columns for col in colonne_richieste):
@@ -182,6 +187,12 @@ if 'domanda_corrente' not in st.session_state:
 def nuova_domanda():
     if st.session_state.idx >= len(st.session_state.quiz_df):
         st.warning("Hai completato tutte le domande di questo quiz!")
+        if st.session_state.practice_mode:
+             st.success("🎉 Pratica finita! Torno alla modalità normale.")
+             st.session_state.practice_mode = False
+             st.session_state.idx = 0
+             reset_quiz_state()
+             st.rerun()
         st.stop()
 
     row = st.session_state.quiz_df.iloc[st.session_state.idx]
@@ -278,7 +289,6 @@ else:
 motivazione = q['motivazione'] if 'motivazione' in df.columns else ""
 
 # --- 6. CSS STILE E COLORI ---
-# Nota: Ho aggiunto margin-bottom al bottone per allinearlo ai box HTML
 css_style = """
 <style>
 div.stButton > button {
