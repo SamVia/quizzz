@@ -51,6 +51,8 @@ if 'correct_count' not in st.session_state:
     st.session_state.correct_count = 0
 if 'wrong_count' not in st.session_state:
     st.session_state.wrong_count = 0
+if 'answer_already_counted' not in st.session_state:
+    st.session_state.answer_already_counted = False
 
 def reset_quiz_state():
     """Resetta completamente lo stato quando si cambia quiz."""
@@ -58,6 +60,7 @@ def reset_quiz_state():
     st.session_state.fase = 'selezione'
     st.session_state.selezione_utente = None
     st.session_state.opzioni_mix = []
+    st.session_state.answer_already_counted = False
     # Reset contatore domande quando si cambia quiz
     if 'domande_risposte_totali' in st.session_state:
         st.session_state.domande_risposte_totali = 0
@@ -387,17 +390,19 @@ st.write("---")
 if st.session_state.fase == 'verificato':
     sel_utente = str(st.session_state.selezione_utente).strip()
     
-    # Traccia la risposta sbagliata se non siamo in pratica
-    if not st.session_state.practice_mode:
-        track_wrong_answer()
-    else:
-        # Se siamo in pratica e la risposta è corretta, rimuovi dalla lista
-        remove_correct_from_wrong_list()
+    # Traccia la risposta (solo una volta)
+    if not st.session_state.answer_already_counted:
+        if not st.session_state.practice_mode:
+            track_wrong_answer()
+        else:
+            remove_correct_from_wrong_list()
+        st.session_state.answer_already_counted = True
     
     if motivazione and str(motivazione) != "nan":
         st.info(f"**Motivazione:**\n\n{motivazione}")
 
     if st.button("PROSSIMA DOMANDA", type="primary", use_container_width=True):
+        st.session_state.answer_already_counted = False
         if st.session_state.practice_mode:
             # Se siamo in pratica, torna alla modalità normale quando finisci
             if st.session_state.idx >= len(st.session_state.quiz_df):
