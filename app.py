@@ -92,12 +92,13 @@ scelta_utente = st.sidebar.radio(
 
 # --- PRACTICE MODE TOGGLE ---
 st.sidebar.markdown("---")
-if st.session_state.wrong_answers:
-    st.sidebar.write(f"❌ Risposte sbagliate: **{len(st.session_state.wrong_answers)}**")
+if st.session_state.wrong_answers or st.session_state.practice_mode:
+    if st.session_state.wrong_answers:
+        st.sidebar.write(f"❌ Risposte sbagliate: **{len(st.session_state.wrong_answers)}**")
     col1, col2 = st.sidebar.columns(2)
     with col1:
-        if st.button("🔄 Pratica", use_container_width=True):
-            st.session_state.practice_mode = True
+        if st.button("🔄 Pratica" if not st.session_state.practice_mode else "⏸️ Esci Pratica", use_container_width=True):
+            st.session_state.practice_mode = not st.session_state.practice_mode
             st.session_state.idx = 0
             st.session_state.domanda_corrente = None
             reset_quiz_state()
@@ -105,6 +106,7 @@ if st.session_state.wrong_answers:
     with col2:
         if st.button("🗑️ Cancella", use_container_width=True):
             st.session_state.wrong_answers = []
+            st.session_state.practice_mode = False
             st.rerun()
 
 file_selezionato = mappa_quiz[scelta_utente]
