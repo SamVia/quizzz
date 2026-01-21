@@ -42,6 +42,12 @@ def get_lista_quiz():
 
 # --- 2. GESTIONE RESET E STATO ---
 
+# Inizializza le variabili di session state critiche
+if 'wrong_answers' not in st.session_state:
+    st.session_state.wrong_answers = []
+if 'practice_mode' not in st.session_state:
+    st.session_state.practice_mode = False
+
 def reset_quiz_state():
     """Resetta completamente lo stato quando si cambia quiz."""
     st.session_state.domanda_corrente = None
@@ -135,11 +141,6 @@ if 'quiz_df' not in st.session_state or st.session_state.get('current_quiz_name'
     reset_quiz_state()
     st.session_state.domanda_corrente = None
     reset_wrong_answers()
-
-if 'wrong_answers' not in st.session_state:
-    st.session_state.wrong_answers = []
-if 'practice_mode' not in st.session_state:
-    st.session_state.practice_mode = False
 
 colonne_richieste = ['domanda', 'opzioneA', 'opzioneB', 'opzioneC', 'soluzione']
 if not all(col in df.columns for col in colonne_richieste):
