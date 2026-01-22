@@ -418,8 +418,7 @@ if st.session_state.fase == 'verificato':
             remove_correct_from_wrong_list()
         st.session_state.answer_already_counted = True
     
-    if motivazione and str(motivazione) != "nan":
-        st.info(f"**Motivazione:**\n\n{motivazione}")
+
 
     if st.button("PROSSIMA DOMANDA", type="primary", use_container_width=True):
         st.session_state.answer_already_counted = False
@@ -439,7 +438,8 @@ if st.session_state.fase == 'verificato':
         else:
             nuova_domanda()
             st.rerun()
-
+    if motivazione and str(motivazione) != "nan":
+        st.info(f"**Motivazione:**\n\n{motivazione}")
 elif st.session_state.fase == 'selezione':
     if st.button("Salta Domanda", use_container_width=True):
         if 'domande_risposte_totali' in st.session_state:
