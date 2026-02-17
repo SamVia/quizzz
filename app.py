@@ -79,6 +79,33 @@ st.sidebar.write("Seleziona un argomento:")
 
 mappa_quiz = get_lista_quiz()
 
+# --- CARICA CSV PERSONALIZZATO ---
+st.sidebar.markdown("---")
+st.sidebar.subheader("📤 Carica Quiz Personalizzato")
+
+uploaded_file = st.sidebar.file_uploader("Scegli un file CSV", type="csv")
+
+if uploaded_file is not None:
+    try:
+        # Leggi il file caricato
+        uploaded_df = pd.read_csv(uploaded_file, encoding='utf-8-sig', sep=',')
+        uploaded_df.columns = [c.strip().replace('\ufeff', '') for c in uploaded_df.columns]
+        
+        # Valida le colonne richieste
+        colonne_richieste = ['domanda', 'opzioneA', 'opzioneB', 'opzioneC', 'soluzione']
+        if all(col in uploaded_df.columns for col in colonne_richieste):
+            # Aggiungi il file caricato alla mappa dei quiz
+            nome_file = uploaded_file.name.replace('.csv', '')
+            nome_pulito = nome_file.replace('_', ' ').title()
+            mappa_quiz[f"📤 {nome_pulito}"] = uploaded_df
+            st.sidebar.success("✅ CSV caricato con successo!")
+        else:
+            st.sidebar.error(f"❌ Colonne mancanti. Richieste: {', '.join(colonne_richieste)}")
+    except Exception as e:
+        st.sidebar.error(f"❌ Errore caricamento: {str(e)}")
+
+st.sidebar.markdown("---")
+
 if not mappa_quiz:
     st.error("Nessun file CSV trovato nella cartella!")
     st.stop()
@@ -118,9 +145,16 @@ file_selezionato = mappa_quiz[scelta_utente]
 def load_data(filename):
     """
     Carica un CSV di quiz in modo robusto.
+    Se filename è un DataFrame, lo restituisce direttamente.
     """
     try:
-        df = pd.read_csv(filename, encoding='utf-8-sig', sep=',')
+        # Se è già un DataFrame (caricato da file uploader), restituiscilo
+        if isinstance(filename, pd.DataFrame):
+            df = filename.copy()
+        else:
+            # Altrimenti carica da file
+            df = pd.read_csv(filename, encoding='utf-8-sig', sep=',')
+        
         # Pulisce nomi colonne
         df.columns = [c.strip().replace('\ufeff', '') for c in df.columns]
         # NaN -> stringa vuota
@@ -383,7 +417,8 @@ def render_button_with_feedback(option_text, key, col):
 
     # 2. SE DOBBIAMO ANCORA RISPONDERE -> MOSTRA BOTTONE CLICCABILE
     else:
-        with col:
+        # Se col è il modulo st, chiama direttamente st.button()
+        if isinstance(col, type(st)):
             st.button(
                 option_text if option_text else "(vuoto)",
                 key=key,
@@ -391,6 +426,16 @@ def render_button_with_feedback(option_text, key, col):
                 on_click=gestisci_click,
                 args=(option_text,)
             )
+        else:
+            # Altrimenti usa col come context manager (per colonne)
+            with col:
+                st.button(
+                    option_text if option_text else "(vuoto)",
+                    key=key,
+                    use_container_width=True,
+                    on_click=gestisci_click,
+                    args=(option_text,)
+                )
 
 # Rendering griglia
 if ha_opzioneD:
@@ -475,8 +520,6 @@ st.session_state.modalita_esame = st.sidebar.checkbox(
 )
 
 if st.session_state.modalita_esame:
-    progress_value = min(st.session_state.domande_esame_fatte / MAX_DOMANDE_ESAME, 1.0)
-    st.progress(progress_value)
     st.write(
         f"📊 **Domande:** {st.session_state.domande_esame_fatte}/{MAX_DOMANDE_ESAME} | "
         f"🎯 **Punteggio:** {round(st.session_state.punteggio, 2)}"
