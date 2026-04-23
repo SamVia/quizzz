@@ -1,0 +1,3 @@
+domanda,opzioneA,opzioneB,opzioneC,opzioneD,soluzione,motivazione
+A good requirement document should be,Complete and consistent,Ambiguous and complete,Redundant and consistent,Reliable and complete,Measurable and complete,A,Nan
+Correctness of a software application is defined as,Complete satisfaction of all customers,Complete satisfaction of the majority of users,Actual output corresponds to the expected output for most inputs,Actual output corresponds to the expected output for all inputs,Successful certification by the specific domain authority,D,NaN
