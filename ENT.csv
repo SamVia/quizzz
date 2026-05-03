@@ -1,0 +1,2 @@
+domanda,opzioneA,opzioneB,opzioneC,opzioneD,soluzione,motivazione
+Switches, "Have one MAC address per physical port.", "Have one MAC address per physical port plus one for each configured VLAN.", "Have a single MAC address for the whole device.", "Do not have any MAC address (they are transparent indeed)", C
