@@ -1,5 +1,3 @@
-Here is the complete, exhaustive cheat sheet covering everything from the OS161 introductory document.
-
 ## OS161 & System/161 Overview
 
 ### OS161 Basics
