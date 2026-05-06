@@ -28,17 +28,24 @@ def crea_csv_esempio_se_mancano():
         pd.DataFrame(data_demo).to_csv('Quiz_Demo.csv', index=False)
 
 def get_lista_quiz():
-    """Scansiona la cartella e restituisce un dizionario {Nome Visualizzato: Nome File}."""
+    """Scansiona la cartella e restituisce home, quizzes e cheatsheets."""
     crea_csv_esempio_se_mancano() 
     
-    files = [f for f in os.listdir('.') if f.endswith('.csv')]
-    mappa_quiz = {}
+    files = [f for f in os.listdir('.') if f.endswith('.csv') or f.endswith('.md')]
+    quizzes = {}
+    cheatsheets = {}
     
     for f in files:
-        nome_pulito = f.replace('.csv', '').replace('_', ' ').title()
-        mappa_quiz[nome_pulito] = f
-        
-    return mappa_quiz
+        if f.lower() == 'readme.md':
+            continue
+        nome_pulito = f.replace('.csv', '').replace('.md', '').replace('_', ' ').title()
+        if f.endswith('.csv'):
+            quizzes[nome_pulito] = f
+        else:
+            cheatsheets[nome_pulito] = f
+
+    readme_item = 'README.md' if os.path.exists('README.md') else None
+    return readme_item, quizzes, cheatsheets
 
 # --- 2. GESTIONE RESET E STATO ---
 
@@ -75,47 +82,90 @@ def reset_wrong_answers():
 # --- 3. SIDEBAR DINAMICA ---
 
 st.sidebar.title("Libreria Quiz")
-st.sidebar.write("Seleziona un argomento:")
+st.sidebar.write("Seleziona una sezione:")
 
-mappa_quiz = get_lista_quiz()
+readme_item, quiz_map, cheatsheet_map = get_lista_quiz()
 
 # --- CARICA CSV PERSONALIZZATO ---
 st.sidebar.markdown("---")
-st.sidebar.subheader("📤 Carica Quiz Personalizzato")
+st.sidebar.subheader("📤 Carica Quiz o Cheatsheet Markdown")
 
-uploaded_file = st.sidebar.file_uploader("Scegli un file CSV", type="csv")
+uploaded_file = st.sidebar.file_uploader("Scegli un file CSV o MD", type=['csv', 'md'])
 
 if uploaded_file is not None:
     try:
-        # Leggi il file caricato
-        uploaded_df = pd.read_csv(uploaded_file, encoding='utf-8-sig', sep=',')
-        uploaded_df.columns = [c.strip().replace('\ufeff', '') for c in uploaded_df.columns]
-        
-        # Valida le colonne richieste
-        colonne_richieste = ['domanda', 'opzioneA', 'opzioneB', 'opzioneC', 'soluzione']
-        if all(col in uploaded_df.columns for col in colonne_richieste):
-            # Aggiungi il file caricato alla mappa dei quiz
-            nome_file = uploaded_file.name.replace('.csv', '')
+        uploaded_name = uploaded_file.name
+        if uploaded_name.lower().endswith('.md'):
+            raw_bytes = uploaded_file.getvalue()
+            try:
+                markdown_text = raw_bytes.decode('utf-8')
+            except UnicodeDecodeError:
+                markdown_text = raw_bytes.decode('latin-1')
+
+            nome_file = uploaded_name.replace('.md', '')
             nome_pulito = nome_file.replace('_', ' ').title()
-            mappa_quiz[f"📤 {nome_pulito}"] = uploaded_df
-            st.sidebar.success("✅ CSV caricato con successo!")
+            cheatsheet_map[f"📤 {nome_pulito}"] = {'type': 'md', 'content': markdown_text}
+            st.sidebar.success("✅ Markdown caricato con successo!")
         else:
-            st.sidebar.error(f"❌ Colonne mancanti. Richieste: {', '.join(colonne_richieste)}")
+            # Leggi il file caricato
+            uploaded_df = pd.read_csv(uploaded_file, encoding='utf-8-sig', sep=',')
+            uploaded_df.columns = [c.strip().replace('\ufeff', '') for c in uploaded_df.columns]
+            
+            # Valida le colonne richieste
+            colonne_richieste = ['domanda', 'opzioneA', 'opzioneB', 'opzioneC', 'soluzione']
+            if all(col in uploaded_df.columns for col in colonne_richieste):
+                nome_file = uploaded_name.replace('.csv', '')
+                nome_pulito = nome_file.replace('_', ' ').title()
+                quiz_map[f"📤 {nome_pulito}"] = uploaded_df
+                st.sidebar.success("✅ CSV caricato con successo!")
+            else:
+                st.sidebar.error(f"❌ Colonne mancanti. Richieste: {', '.join(colonne_richieste)}")
     except Exception as e:
         st.sidebar.error(f"❌ Errore caricamento: {str(e)}")
 
 st.sidebar.markdown("---")
 
-if not mappa_quiz:
-    st.error("Nessun file CSV trovato nella cartella!")
+if not quiz_map and not cheatsheet_map and readme_item is None:
+    st.error("Nessun file CSV o MD trovato nella cartella!")
     st.stop()
 
-titoli_disponibili = list(mappa_quiz.keys())
-scelta_utente = st.sidebar.radio(
-    "Argomenti:", 
-    titoli_disponibili,
-    on_change=reset_quiz_state 
+section_options = []
+if readme_item is not None:
+    section_options.append("Home")
+if quiz_map:
+    section_options.append("Quiz")
+if cheatsheet_map:
+    section_options.append("Cheatsheets")
+
+selected_section = st.sidebar.radio(
+    "Seleziona sezione:",
+    section_options,
+    index=0,
+    on_change=reset_quiz_state,
+    key="section_selection"
 )
+
+scelta_utente = None
+file_selezionato = None
+if selected_section == "Home":
+    scelta_utente = "Home"
+    file_selezionato = readme_item
+elif selected_section == "Quiz":
+    scelta_utente = st.sidebar.radio(
+        "Quiz disponibili:",
+        list(quiz_map.keys()),
+        on_change=reset_quiz_state,
+        key="quiz_selection"
+    )
+    file_selezionato = quiz_map[scelta_utente]
+else:
+    scelta_utente = st.sidebar.radio(
+        "Cheatsheet disponibili:",
+        list(cheatsheet_map.keys()),
+        on_change=reset_quiz_state,
+        key="cheatsheet_selection"
+    )
+    file_selezionato = cheatsheet_map[scelta_utente]
 
 # --- PRACTICE MODE TOGGLE ---
 st.sidebar.markdown("---")
@@ -137,9 +187,49 @@ if st.session_state.wrong_answers or st.session_state.practice_mode:
             st.session_state.practice_mode = False
             st.rerun()
 
-file_selezionato = mappa_quiz[scelta_utente]
+@st.cache_data
+def load_markdown(file_item):
+    """Carica il contenuto di un file Markdown locale o caricato."""
+    try:
+        if isinstance(file_item, dict) and file_item.get('type') == 'md':
+            return file_item.get('content', '')
+        if isinstance(file_item, str):
+            with open(file_item, 'r', encoding='utf-8') as f:
+                return f.read()
+        if hasattr(file_item, 'read'):
+            raw = file_item.read()
+            if isinstance(raw, bytes):
+                try:
+                    return raw.decode('utf-8')
+                except UnicodeDecodeError:
+                    return raw.decode('latin-1')
+            return str(raw)
+    except UnicodeDecodeError:
+        if isinstance(file_item, str):
+            with open(file_item, 'r', encoding='latin-1') as f:
+                return f.read()
+    except Exception as e:
+        st.error(f"Errore caricamento Markdown: {e}")
+    return ''
+
+
+def is_markdown_file(item):
+    if isinstance(item, dict) and item.get('type') == 'md':
+        return True
+    if isinstance(item, str) and item.lower().endswith('.md'):
+        return True
+    if hasattr(item, 'name') and isinstance(item.name, str) and item.name.lower().endswith('.md'):
+        return True
+    return False
 
 # --- 4. CARICAMENTO DATI ---
+
+if is_markdown_file(file_selezionato):
+    markdown_content = load_markdown(file_selezionato)
+    st.title(scelta_utente)
+    st.write("---")
+    st.markdown(markdown_content)
+    st.stop()
 
 @st.cache_data
 def load_data(filename):
@@ -167,6 +257,7 @@ def load_data(filename):
     except Exception as e:
         st.error(f"Errore caricamento CSV: {e}")
         return None
+
 
 def load_practice_data():
     """Carica i dati per la modalità pratica dalle risposte sbagliate."""

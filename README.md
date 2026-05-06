@@ -3,7 +3,9 @@
 ## Features
 
 ### Core Features
+- **Default Home Page**: README is shown as the app landing page when the site loads
 - **Dynamic Quiz Loading**: automatically detects and loads all CSV quiz files from the project directory
+- **Cheatsheet Support**: detects Markdown files and displays them as full-page study notes
 - **Multiple Quiz Topics**
 - **Interactive UI**: responsive interface with shuffled answer options
 - **Practice Mode**: review and practice only the questions you got wrong
@@ -31,18 +33,27 @@
 ## Usage
 
 
-### Uploading Custom Quizzes
+### Uploading Custom Quizzes or Cheatsheets
 
-You can upload your own quiz CSV files directly from the app without needing to place them in the project directory:
+You can upload your own quiz CSV files or markdown cheatsheets directly from the app without needing to place them in the project directory:
 
 1. **Prepare Your CSV File** - Ensure it follows the format specification below
 2. **Open the App** and navigate to the sidebar
-3. **Click the File Uploader** under "📤 Carica Quiz Personalizzato"
-4. **Select Your CSV File** from your computer
+3. **Click the File Uploader** under "📤 Carica Quiz o Cheatsheet Markdown"
+4. **Select Your CSV or MD File** from your computer
 5. **Validation** - The app will automatically validate the file format
-6. **Use Your Quiz** - Once uploaded successfully, your quiz appears in the topic list with a 📤 icon
+6. **Use Your Content** - Once uploaded successfully, your quiz or cheatsheet appears in the topic list with a 📤 icon
 
-Uploaded quizzes are temporary and exist only for your current session. They are not saved to the project directory.
+Uploaded quizzes and cheatsheets are temporary and exist only for your current session. They are not saved to the project directory.
+
+### Cheatsheet Markdown Section
+The application automatically detects `.md` files in the project directory and displays them under the **Cheatsheets** section. When you select a cheatsheet:
+
+- the app renders the Markdown contents directly on the page
+- headers, lists, code blocks, links and formatting are displayed as normal markdown
+- uploaded `.md` files are available in the **Cheatsheets** section for the current session only
+
+If `README.md` exists in the folder, it is shown automatically on the **Home** section as the default landing page.
 
 ### CSV File Format
 
@@ -67,10 +78,10 @@ Cos'è il Cloud Computing?,Un tipo di computer,Distribuzione di servizi IT su In
 ### Features Guide
 
 #### 1. **Quiz Upload & Selection**
-- **Upload Custom Quiz**: Use the "📤 Carica Quiz Personalizzato" section in the sidebar to upload your own CSV file
-- **Auto-Detection**: The app automatically detects and lists all CSV files in the project directory
-- **Topic Selection**: Use the sidebar radio buttons to select from available quiz topics
-- **Uploaded Quizzes**: Uploaded quizzes appear with a 📤 icon to distinguish them from local files
+- **Upload Custom Quiz or Cheatsheet**: Use the "📤 Carica Quiz o Cheatsheet Markdown" section in the sidebar to upload your own file
+- **Auto-Detection**: The app automatically detects all CSV quizzes and Markdown cheatsheets in the project directory
+- **Topic Selection**: Use the sidebar to switch between Home, Quiz, and Cheatsheets sections and select the content you want
+- **Uploaded Items**: Uploaded quizzes and cheatsheets appear with a 📤 icon to distinguish them from local files
 - **Format Validation**: The app validates that uploaded CSV files contain all required columns before loading
 - **Questions are randomly shuffled for each session**
 
