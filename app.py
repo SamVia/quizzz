@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import random
 import os
+import re
 
 # --- CONFIGURAZIONE ---
 st.set_page_config(page_title="Dynamic Quiz Loader", page_icon="🚽", layout="wide")
@@ -54,6 +55,43 @@ def get_lista_quiz():
 
     readme_item = 'README.md' if os.path.exists('README.md') else None
     return readme_item, quizzes, cheatsheets
+
+
+def parse_cheatsheet_category(label):
+    """Estrae categoria e ordine numerico da un nome di cheatsheet."""
+    if label.startswith("📤 "):
+        label = label[2:]
+    label = label.strip()
+    parts = label.split()
+    if not parts:
+        return "Other", 999, label
+
+    category = parts[0].upper()
+    order = None
+    if len(parts) > 1:
+        match = re.match(r'^(\d+)', parts[1])
+        if match:
+            order = int(match.group(1))
+
+    if order is None:
+        match = re.search(r'(\d+)', label)
+        if match:
+            order = int(match.group(1))
+
+    return category, order if order is not None else 999, label
+
+
+def build_cheatsheet_categories(cheatsheet_map):
+    categories = {}
+    for label, item in cheatsheet_map.items():
+        category, order, display = parse_cheatsheet_category(label)
+        categories.setdefault(category, []).append((order, display, item))
+
+    for cat, items in categories.items():
+        items.sort(key=lambda x: (x[0], x[1]))
+        categories[cat] = items
+
+    return dict(sorted(categories.items(), key=lambda x: x[0]))
 
 # --- 2. GESTIONE RESET E STATO ---
 
@@ -167,13 +205,25 @@ elif selected_section == "Quiz":
     )
     file_selezionato = quiz_map[scelta_utente]
 else:
+    cheatsheet_categories = build_cheatsheet_categories(cheatsheet_map)
+    category_options = list(cheatsheet_categories.keys())
+    selected_category = st.sidebar.selectbox(
+        "Categoria Cheatsheets:",
+        category_options,
+        key="cheatsheet_category"
+    )
+
+    cheatsheet_items = cheatsheet_categories[selected_category]
+    cheatsheet_labels = [label for _, label, _ in cheatsheet_items]
     scelta_utente = st.sidebar.radio(
         "Cheatsheet disponibili:",
-        list(cheatsheet_map.keys()),
+        cheatsheet_labels,
         on_change=reset_quiz_state,
         key="cheatsheet_selection"
     )
-    file_selezionato = cheatsheet_map[scelta_utente]
+    file_selezionato = next(
+        item for order, label, item in cheatsheet_items if label == scelta_utente
+    )
 
 # --- PRACTICE MODE TOGGLE ---
 st.sidebar.markdown("---")

@@ -40,6 +40,8 @@ The app now expects local content in separate folders:
 - `md/` for Markdown cheatsheets
 - `README.md` remains in the project root and is shown on the Home page
 
+Cheatsheets are grouped automatically by the first part of their filename before the first underscore. For example, `PDS_1_intro.md` and `PDS_2_memory.md` are both grouped under category `PDS`, and they are sorted by their numeric part.
+
 You can still upload your own quiz CSV files or markdown cheatsheets directly from the app without needing to place them in the project directory:
 
 1. **Prepare Your CSV File** - Ensure it follows the format specification below
