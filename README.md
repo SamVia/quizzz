@@ -35,7 +35,12 @@
 
 ### Uploading Custom Quizzes or Cheatsheets
 
-You can upload your own quiz CSV files or markdown cheatsheets directly from the app without needing to place them in the project directory:
+The app now expects local content in separate folders:
+- `csv/` for all quiz CSV files
+- `md/` for Markdown cheatsheets
+- `README.md` remains in the project root and is shown on the Home page
+
+You can still upload your own quiz CSV files or markdown cheatsheets directly from the app without needing to place them in the project directory:
 
 1. **Prepare Your CSV File** - Ensure it follows the format specification below
 2. **Open the App** and navigate to the sidebar

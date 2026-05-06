@@ -12,8 +12,10 @@ MAX_DOMANDE_ESAME = 33
 # --- 1. FUNZIONI UTILITY ---
 
 def crea_csv_esempio_se_mancano():
-    """Crea dei file di test solo se non c'è nessun CSV nella cartella."""
-    files_csv = [f for f in os.listdir('.') if f.endswith('.csv')]
+    """Crea un file di test in csv/ se non ci sono quiz disponibili."""
+    csv_dir = 'csv'
+    os.makedirs(csv_dir, exist_ok=True)
+    files_csv = [f for f in os.listdir(csv_dir) if f.endswith('.csv')]
     
     if not files_csv:
         data_demo = {
@@ -25,24 +27,30 @@ def crea_csv_esempio_se_mancano():
             'soluzione': ['B', 'B'], 
             'motivazione': ['Matematica base.', 'Rayleigh scattering.']
         }
-        pd.DataFrame(data_demo).to_csv('Quiz_Demo.csv', index=False)
+        pd.DataFrame(data_demo).to_csv(os.path.join(csv_dir, 'Quiz_Demo.csv'), index=False)
 
 def get_lista_quiz():
-    """Scansiona la cartella e restituisce home, quizzes e cheatsheets."""
-    crea_csv_esempio_se_mancano() 
-    
-    files = [f for f in os.listdir('.') if f.endswith('.csv') or f.endswith('.md')]
+    """Scansiona csv/ e md/ e restituisce home, quizzes e cheatsheets."""
+    crea_csv_esempio_se_mancano()
+    csv_dir = 'csv'
+    md_dir = 'md'
+    os.makedirs(csv_dir, exist_ok=True)
+    os.makedirs(md_dir, exist_ok=True)
+
     quizzes = {}
     cheatsheets = {}
-    
-    for f in files:
-        if f.lower() == 'readme.md':
-            continue
-        nome_pulito = f.replace('.csv', '').replace('.md', '').replace('_', ' ').title()
-        if f.endswith('.csv'):
-            quizzes[nome_pulito] = f
-        else:
-            cheatsheets[nome_pulito] = f
+
+    if os.path.isdir(csv_dir):
+        for f in os.listdir(csv_dir):
+            if f.endswith('.csv'):
+                nome_pulito = f.replace('.csv', '').replace('_', ' ').title()
+                quizzes[nome_pulito] = os.path.join(csv_dir, f)
+
+    if os.path.isdir(md_dir):
+        for f in os.listdir(md_dir):
+            if f.endswith('.md'):
+                nome_pulito = f.replace('.md', '').replace('_', ' ').title()
+                cheatsheets[nome_pulito] = os.path.join(md_dir, f)
 
     readme_item = 'README.md' if os.path.exists('README.md') else None
     return readme_item, quizzes, cheatsheets
