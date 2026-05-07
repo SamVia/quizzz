@@ -1,0 +1,1 @@
+$path = 'c:\Users\DELL\Desktop\Programming\quizzz\md\FILENAME.md'; $content = Get-Content $path -Raw; $content = $content -replace '\[cite_start\]', '' -replace '\[cite: [0-9, ]+\]', ''; $content | Set-Content $path -Encoding UTF8
