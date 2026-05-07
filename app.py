@@ -56,7 +56,7 @@ def get_lista_quiz():
                         category = 'OTHER'
                     else:
                         category = rel_path.upper()
-                    nome_pulito = f.replace('.md', '').replace('_', ' ').title()
+                    nome_pulito = f.replace('.md', '').replace('_', ' ')
                     label = f"{category} {nome_pulito}"
                     cheatsheets[label] = os.path.join(root, f)
 
@@ -85,7 +85,14 @@ def parse_cheatsheet_category(label):
         if match:
             order = int(match.group(1))
 
-    return category, order if order is not None else 999, label
+    # Compute display
+    display = ' '.join(parts[1:]) if len(parts) > 1 else label
+    if display and display[0].isdigit():
+        space_index = display.find(' ')
+        if space_index != -1:
+            display = display[:space_index] + '. ' + display[space_index+1:]
+
+    return category, order if order is not None else 999, display
 
 
 def build_cheatsheet_categories(cheatsheet_map):
