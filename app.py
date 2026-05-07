@@ -48,10 +48,17 @@ def get_lista_quiz():
                 quizzes[nome_pulito] = os.path.join(csv_dir, f)
 
     if os.path.isdir(md_dir):
-        for f in os.listdir(md_dir):
-            if f.endswith('.md'):
-                nome_pulito = f.replace('.md', '').replace('_', ' ').title()
-                cheatsheets[nome_pulito] = os.path.join(md_dir, f)
+        for root, dirs, files in os.walk(md_dir):
+            for f in files:
+                if f.endswith('.md'):
+                    rel_path = os.path.relpath(root, md_dir)
+                    if rel_path == '.':
+                        category = 'OTHER'
+                    else:
+                        category = rel_path.upper()
+                    nome_pulito = f.replace('.md', '').replace('_', ' ').title()
+                    label = f"{category} {nome_pulito}"
+                    cheatsheets[label] = os.path.join(root, f)
 
     readme_item = 'README.md' if os.path.exists('README.md') else None
     return readme_item, quizzes, cheatsheets
