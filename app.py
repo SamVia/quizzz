@@ -3,7 +3,7 @@ import pandas as pd
 import random
 import os
 import re
-
+import streamlit.components.v1 as components # <--- AGGIUNGI QUESTO
 # --- CONFIGURAZIONE ---
 st.set_page_config(page_title="Dynamic Quiz Loader", page_icon="🚽", layout="wide")
 
@@ -298,11 +298,92 @@ def is_markdown_file(item):
 
 if is_markdown_file(file_selezionato):
     markdown_content = load_markdown(file_selezionato)
+    
+    # Uniamo Scroll to Top, Progress Bar e Cleanup in un unico script.
+    # L'f-string garantisce che Streamlit ricarichi lo script al cambio file.
+    js_code = f"""
+    <script>
+        // ID univoco per forzare il re-render: {scelta_utente}
+        const doc = window.parent.document;
+        
+        // 1. SCROLL TO TOP
+        const mainDiv = doc.querySelector('.stMain') || doc.documentElement;
+        if (mainDiv) {{
+            mainDiv.scrollTop = 0;
+        }}
+        window.parent.scrollTo(0, 0);
+
+        // 2. PULIZIA FONDAMENTALE PRECEDENTE BARRA (Failsafe)
+        const oldContainer = doc.getElementById('reading-progress-container');
+        if (oldContainer) oldContainer.remove();
+        
+        if (window.parent._scrollListener) {{
+            doc.removeEventListener('scroll', window.parent._scrollListener, true);
+        }}
+
+        // 3. CREAZIONE NUOVA PROGRESS BAR
+        const container = doc.createElement('div');
+        container.id = 'reading-progress-container';
+        container.style.position = 'fixed';
+        container.style.top = '0';
+        container.style.left = '0';
+        container.style.width = '100%';
+        container.style.height = '5px';
+        container.style.backgroundColor = 'transparent';
+        container.style.zIndex = '9999999';
+        
+        const bar = doc.createElement('div');
+        bar.id = 'reading-progress-bar';
+        bar.style.height = '100%';
+        bar.style.width = '0%';
+        bar.style.backgroundColor = '#FF4B4B'; // Rosso Streamlit
+        bar.style.transition = 'width 0.1s ease';
+        bar.style.borderRadius = '0 2px 2px 0';
+        
+        container.appendChild(bar);
+        doc.body.appendChild(container);
+        
+        // 4. FUNZIONE DI AGGIORNAMENTO SCROLL
+        window.parent._scrollListener = () => {{
+            const scrollElement = doc.querySelector('.stMain') || doc.documentElement;
+            const scrollTop = scrollElement.scrollTop || doc.body.scrollTop;
+            const scrollHeight = scrollElement.scrollHeight || doc.body.scrollHeight;
+            const clientHeight = scrollElement.clientHeight || doc.documentElement.clientHeight;
+            
+            const height = scrollHeight - clientHeight;
+            if (height > 0) {{
+                const scrolled = (scrollTop / height) * 100;
+                bar.style.width = scrolled + '%';
+            }} else {{
+                bar.style.width = '100%';
+            }}
+        }};
+        
+        // Attacchiamo l'evento
+        doc.addEventListener('scroll', window.parent._scrollListener, true);
+
+        // 5. CLEANUP QUANDO SI CAMBIA PAGINA O SEZIONE (es. passando ai Quiz)
+        // Quando Streamlit distrugge questo iframe, rimuoviamo la barra e il listener.
+        window.addEventListener('unload', () => {{
+            if (container && container.parentNode) {{
+                container.parentNode.removeChild(container);
+            }}
+            if (window.parent._scrollListener) {{
+                doc.removeEventListener('scroll', window.parent._scrollListener, true);
+                window.parent._scrollListener = null;
+            }}
+        }});
+    </script>
+    """
+    
+    # Eseguiamo il blocco unificato
+    components.html(js_code, height=0, width=0)
+    
     st.title(scelta_utente)
     st.write("---")
     st.markdown(markdown_content)
+    
     st.stop()
-
 @st.cache_data
 def load_data(filename):
     """
