@@ -1,51 +1,44 @@
 ## **1. Historic Trends & The Path to Datacenters**
 
-* 
-**Evolution of Computing:** The industry transitioned from mainframes to minicomputers, and then to scattered servers.
+* **Evolution of Computing:** The industry transitioned from mainframes to minicomputers, and then to scattered servers.
 
 
-* 
-**The Problem with Scattered Servers:** * Servers were distributed across companies and controlled by various organizations, leading to permission and access silos.
+  * **The Problem with Scattered Servers:** * Servers were distributed across companies and controlled by various organizations, leading to permission and access silos.
 
 
-* Security risks were high; hard disks could easily be stolen from unprotected servers.
+  * Security risks were high; hard disks could easily be stolen from unprotected servers.
 
 
-* Permissions and backups were often mismanaged.
+  * Permissions and backups were often mismanaged.
 
 
 
 
-* 
-**The Solution:** Centralize servers into a single location: the **datacenter**.
+  * **The Solution:** Centralize servers into a single location: the **datacenter**.
 
 
 * **Data Access Models:**
-* 
-**Mainframes:** Centralized access (historic).
+  * **Mainframes:** Centralized access (historic).
 
 
-* 
-**Client-Server** and **Peer-to-Peer**.
+  * **Client-Server** and **Peer-to-Peer**.
 
 
-* Mixed models are also utilized.
+  * Mixed models are also utilized.
 
 
 
 
 * **Datacenter Consolidation Benefits:**
-* 
-**Storage:** Disks are decoupled from computational resources, providing immense flexibility in storage space allocation.
+  * **Storage:** Disks are decoupled from computational resources, providing immense flexibility in storage space allocation.
 
 
-* 
-**Computational Resources:** Enhanced flexibility and optimized power consumption.
+  * **Computational Resources:** Enhanced flexibility and optimized power consumption.
 
 
 
 
-* **Cloud Computing:** Access environments anywhere, anytime, on any device. Mobile devices prioritize battery, thereby possessing limited processing power, which makes cloud/datacenter reliance essential.
+  * **Cloud Computing:** Access environments anywhere, anytime, on any device. Mobile devices prioritize battery, thereby possessing limited processing power, which makes cloud/datacenter reliance essential.
 
 
 
@@ -58,8 +51,7 @@
 * **CHS (Cylinder-Head-Sector) Addressing:** * A historic method to index data. A specific track is determined by the head and cylinder numbers.
 
 
-* 
-**Sector:** The smallest storage unit addressable by a hard drive, usually **512 bytes**.
+* **Sector:** The smallest storage unit addressable by a hard drive, usually **512 bytes**.
 
 
 * Disk controllers map logical to physical addresses (e.g., accounting for fewer bytes in inner tracks).
@@ -90,22 +82,18 @@
 
 Operating Systems abstract raw disks into structures accessible to applications.
 
-* 
-**Master Boot Record (MBR):** The first **512 bytes** of the disk.
+* **Master Boot Record (MBR):** The first **512 bytes** of the disk.
 
 
-* 
-**Boot Loader:** Occupies **446 bytes**.
+* **Boot Loader:** Occupies **446 bytes**.
 
 
-* 
-**Partition Table:** Occupies the remaining space via **4 slots of 16 Bytes each**.
+* **Partition Table:** Occupies the remaining space via **4 slots of 16 Bytes each**.
 
 
 
 
-* 
-**File System Hierarchy:** Consists of the File Allocation Table, Directories, and individual files.
+* **File System Hierarchy:** Consists of the File Allocation Table, Directories, and individual files.
 
 
 
@@ -115,31 +103,26 @@ Operating Systems abstract raw disks into structures accessible to applications.
 
 ### **Direct Attached Storage (DAS)**
 
-* 
-**Definition:** Each server has exclusive access to its attached storage devices.
+* **Definition:** Each server has exclusive access to its attached storage devices.
 
 
 * **SCSI (Small Computer System Interface):**
 * A standard defining a set of commands, a transaction protocol, and a physical interface.
 
 
-* 
-**Block-Oriented:** The host OS views the storage as contiguous sets of fixed-size data blocks.
+* **Block-Oriented:** The host OS views the storage as contiguous sets of fixed-size data blocks.
 
 
 * **Legacy SCSI:** Operated as a complete protocol stack (from cables to application commands). It used a parallel and shared bus, allowing multiple devices per host.
 
 
-* 
-**Addressing:** Devices are addressed using a **LUN** (Logical Unit Number).
+* **Addressing:** Devices are addressed using a **LUN** (Logical Unit Number).
 
 
-* 
-**SCSI Limits:** Maximum length of **25 meters**, supporting a maximum of **16 devices**.
+* **SCSI Limits:** Maximum length of **25 meters**, supporting a maximum of **16 devices**.
 
 
-* 
-**Characteristics:** Guaranteed data integrity with a very low error rate (though error recovery was inefficient), and extremely low latency (milliseconds through disk, microseconds through cache).
+* **Characteristics:** Guaranteed data integrity with a very low error rate (though error recovery was inefficient), and extremely low latency (milliseconds through disk, microseconds through cache).
 
 
 
@@ -162,8 +145,7 @@ Storage decoupled from servers via networks to solve DAS limitations (poor scala
 
 ### **Network Attached Storage (NAS)**
 
-* 
-**Definition:** Separates storage from compute, allowing servers/clients to connect over standard network technologies (LAN/WAN or Internet).
+* **Definition:** Separates storage from compute, allowing servers/clients to connect over standard network technologies (LAN/WAN or Internet).
 
 
 * **Characteristics:**
@@ -186,9 +168,7 @@ Storage decoupled from servers via networks to solve DAS limitations (poor scala
 
 
 
-
-* 
-**Pros:** High compatibility across OS platforms, works over WAN, and has minimal impact on existing infrastructure.
+* **Pros:** High compatibility across OS platforms, works over WAN, and has minimal impact on existing infrastructure.
 
 
 * **Cons:**
@@ -215,20 +195,16 @@ Storage decoupled from servers via networks to solve DAS limitations (poor scala
 
 ### **Storage Area Network (SAN)**
 
-* 
-**Definition:** A dedicated storage network that virtualizes physical disks and provides access via logical blocks (not files).
+* **Definition:** A dedicated storage network that virtualizes physical disks and provides access via logical blocks (not files).
 
 
-* 
-**Architecture:** Acts as a two-tier or three-tier model, interacting with disks exactly as DAS did.
+* **Architecture:** Acts as a two-tier or three-tier model, interacting with disks exactly as DAS did.
 
 
-* 
-**SCSI Integration:** Maintains the upper layers of the SCSI protocol stack (end-to-end communication) to guarantee compatibility with all existing SCSI applications.
+* **SCSI Integration:** Maintains the upper layers of the SCSI protocol stack (end-to-end communication) to guarantee compatibility with all existing SCSI applications.
 
 
-* 
-**Network Requirements:** Demands high speed, low latency, very low error rates, high node compatibility, and metropolitan distance coverage. Ethernet alone is historically insufficient to build a SAN.
+* **Network Requirements:** Demands high speed, low latency, very low error rates, high node compatibility, and metropolitan distance coverage. Ethernet alone is historically insufficient to build a SAN.
 
 
 
@@ -276,8 +252,7 @@ Storage decoupled from servers via networks to solve DAS limitations (poor scala
 
 SAN allows virtual resources to be decoupled from physical resources.
 
-* 
-**Enclosure Level:** Disk controllers map physical disks into virtual drives, aggregating or splitting capacity, and providing transparent replication/RAID.
+* **Enclosure Level:** Disk controllers map physical disks into virtual drives, aggregating or splitting capacity, and providing transparent replication/RAID.
 
 
 * **Datacenter Level:** Required because a failing enclosure takes down all its internal replication. Implementing virtualization blades (L7) in datacenter switches or using software controllers enables transparent data duplication across geographically separate datacenters (this is why JBODs are often preferred over smart enclosures here).
@@ -290,8 +265,7 @@ SAN allows virtual resources to be decoupled from physical resources.
 
 SAN supports multiple transport implementations for the SCSI command layer:
 
-* 
-**Parallel SCSI:** Obsolete.
+* **Parallel SCSI:** Obsolete.
 
 
 * **Fibre Channel (FC):** Native evolution of SCSI. Supports higher speeds and complex network topologies.
@@ -303,15 +277,13 @@ SAN supports multiple transport implementations for the SCSI command layer:
 * **FCIP:** Fibre Channel over IP. Used to interconnect separate FC domains via geographic TCP/IP links (ideal for remote backups/redundancy).
 
 
-* 
-**FCoE (Fibre Channel over Ethernet):** Maps FC higher layers directly onto a lossless Ethernet physical layer, designed heavily for datacenter convergence.
+* **FCoE (Fibre Channel over Ethernet):** Maps FC higher layers directly onto a lossless Ethernet physical layer, designed heavily for datacenter convergence.
 
 
 
 ### **SAN over Ethernet (TCP/IP)**
 
-* 
-**Advantages:** Extreme network simplicity, low infrastructural/training costs, fast upgrade paths leveraging Ethernet economies of scale, and the ability to run a single converged network.
+* **Advantages:** Extreme network simplicity, low infrastructural/training costs, fast upgrade paths leveraging Ethernet economies of scale, and the ability to run a single converged network.
 
 
 * **Problems:**
@@ -336,29 +308,23 @@ SAN supports multiple transport implementations for the SCSI command layer:
 
 ### **Overview & Topologies**
 
-* 
-**Purpose:** Created as a reliable, high-speed serial replacement for parallel Ultra3 SCSI.
+* **Purpose:** Created as a reliable, high-speed serial replacement for parallel Ultra3 SCSI.
 
 
-* 
-**Speeds:** Native support for **1, 2, 4, 8, and 16 Gbps**.
+* **Speeds:** Native support for **1, 2, 4, 8, and 16 Gbps**.
 
 
-* 
-**Control/Data Planes:** The data plane remains standard SCSI, but the control plane introduces complex new disk management features and strict lossless modes.
+* **Control/Data Planes:** The data plane remains standard SCSI, but the control plane introduces complex new disk management features and strict lossless modes.
 
 
 * **Connection Modes:**
-* 
-**Direct Connection:** Point-to-point (historic SCSI replacement).
+* **Direct Connection:** Point-to-point (historic SCSI replacement).
 
 
-* 
-**Arbitrated Loop:** Ring topology connecting up to **127 nodes** (historic).
+* **Arbitrated Loop:** Ring topology connecting up to **127 nodes** (historic).
 
 
-* 
-**Switched Fabric:** Meshed network utilizing full-duplex links between switches and nodes.
+* **Switched Fabric:** Meshed network utilizing full-duplex links between switches and nodes.
 
 
 
@@ -366,62 +332,49 @@ SAN supports multiple transport implementations for the SCSI command layer:
 
 ### **Fibre Channel Protocol Stack**
 
-* 
-**FC-0:** Physical layer interface definitions.
+* **FC-0:** Physical layer interface definitions.
 
 
-* 
-**FC-1:** Transmission, encoding, and low-level link control.
+* **FC-1:** Transmission, encoding, and low-level link control.
 
 
-* 
-**FC-2:** Signalling/End-to-End data transfer (defines Frame format, Addressing, Segmentation, Flow control, Error detection/correction).
+* **FC-2:** Signalling/End-to-End data transfer (defines Frame format, Addressing, Segmentation, Flow control, Error detection/correction).
 
 
-* 
-**FC-3:** Common services (Cryptography, Compression, Channel bonding).
+* **FC-3:** Common services (Cryptography, Compression, Channel bonding).
 
 
-* 
-**FC-4:** ULP Mapping (Protocol mapping between upper layers and the FC transport layer).
+* **FC-4:** ULP Mapping (Protocol mapping between upper layers and the FC transport layer).
 
 
 
 ### **FC Port Types**
 
-* 
-**N_port:** Host Bus Adapter (HBA) on end nodes.
+* **N_port:** Host Bus Adapter (HBA) on end nodes.
 
 
-* 
-**F_port:** Switch port connecting to an HBA.
+* **F_port:** Switch port connecting to an HBA.
 
 
-* 
-**E_port:** Switch-to-switch connection (Inter-Switch Link / ISL).
+* **E_port:** Switch-to-switch connection (Inter-Switch Link / ISL).
 
 
-* 
-**NL_port / FL_port:** Ports operating in loop functioning.
+* **NL_port / FL_port:** Ports operating in loop functioning.
 
 
 
 ### **Addressing in Fibre Channel**
 
-* 
-**World Wide Name (WWN):** A unique, hardcoded **64-bit** name identifier assigned at the factory for nodes, ports, and switches.
+* **World Wide Name (WWN):** A unique, hardcoded **64-bit** name identifier assigned at the factory for nodes, ports, and switches.
 
 
-* 
-**Dynamic Address:** During data exchanges, a **24-bit** address is dynamically assigned, comprising three 8-bit components:
+* **Dynamic Address:** During data exchanges, a **24-bit** address is dynamically assigned, comprising three 8-bit components:
 
 
-1. 
-**Domain_ID (8 bits):** Assigned to switches (range 00h to EFh), max **239 switches**. The range F0h to FFh is reserved for "Well Known Addresses" (e.g., address 00 is for Fabric services implemented internally by the switches).
+1. **Domain_ID (8 bits):** Assigned to switches (range 00h to EFh), max **239 switches**. The range F0h to FFh is reserved for "Well Known Addresses" (e.g., address 00 is for Fabric services implemented internally by the switches).
 
 
-2. 
-**Area_ID (8 bits)** & **Port_ID (8 bits):** Assigned to end nodes, theoretically allowing **65536 nodes per switch**.
+2. **Area_ID (8 bits)** & **Port_ID (8 bits):** Assigned to end nodes, theoretically allowing **65536 nodes per switch**.
 
 
 
@@ -429,24 +382,19 @@ SAN supports multiple transport implementations for the SCSI command layer:
 
 ### **Routing & Communication**
 
-* 
-**FSPF (Fabric Shortest Path First):** The link-state routing protocol used to propagate domain/area reachability (similar to IP's OSPF).
+* **FSPF (Fabric Shortest Path First):** The link-state routing protocol used to propagate domain/area reachability (similar to IP's OSPF).
 
 
-* 
-**Loops Limit:** Fibre Channel does **not** have a TTL (Time To Live) mechanism; therefore, infinite packet loops are possible, requiring FSPF to converge as fast as possible.
+* **Loops Limit:** Fibre Channel does **not** have a TTL (Time To Live) mechanism; therefore, infinite packet loops are possible, requiring FSPF to converge as fast as possible.
 
 
-* 
-**Data Exchange:** Communication between nodes opens an "exchange," which expects half-duplex frame "sequences" while managing flow control, resource reservation, and ordered delivery.
+* **Data Exchange:** Communication between nodes opens an "exchange," which expects half-duplex frame "sequences" while managing flow control, resource reservation, and ordered delivery.
 
 
-* 
-**Flow Control:** Executed End-to-End or Buffer-to-Buffer utilizing a strict **credit mechanism**.
+* **Flow Control:** Executed End-to-End or Buffer-to-Buffer utilizing a strict **credit mechanism**.
 
 
-* 
-*Edge case / Flaw:* Deadlock can occur; entire links can be blocked due to a lack of credits.
+* *Edge case / Flaw:* Deadlock can occur; entire links can be blocked due to a lack of credits.
 
 
 
@@ -476,8 +424,7 @@ SAN supports multiple transport implementations for the SCSI command layer:
 * **VSAN (Virtual SAN):** Logical partitioning of a physical SAN (analogous to Ethernet VLANs). Critical for Storage Service Providers.
 
 
-* 
-**Network Optimization:** SANs support Link Aggregation and Load Balancing natively.
+* **Network Optimization:** SANs support Link Aggregation and Load Balancing natively.
 
 
 
@@ -486,8 +433,7 @@ SAN supports multiple transport implementations for the SCSI command layer:
 * **The Hardware Sprawl Problem:** Historically, a single server required 1 NIC for LAN, 1 HBA for Storage (FC), and 1 NIC for clustering (Infiniband)—doubled for redundancy. This led to high costs, excess power draw, depleted PCI slots, rack crowding, and cable nightmares.
 
 
-* 
-**The 10GbE / FCoE Solution:** * 10Gb Ethernet provides the necessary bandwidth to consolidate all these onto a single network type.
+* **The 10GbE / FCoE Solution:** * 10Gb Ethernet provides the necessary bandwidth to consolidate all these onto a single network type.
 
 
 * To overcome Ethernet's frame loss flaw, **Priority Flow Control** (per-priority PAUSE, submitted to IEEE 802.3) provides lossless behavior at the network layer.
@@ -501,13 +447,11 @@ SAN supports multiple transport implementations for the SCSI command layer:
 
 ### **Major Industry Vendors**
 
-* 
-**SAN Specialists:** Brocade, Cisco.
+* **SAN Specialists:** Brocade, Cisco.
 
 
 * 
 **NAS Specialists:** NetApp, HP, Dell.
 
 
-* 
-**Turnkey Enterprise Solutions:** IBM, EMC.
+* **Turnkey Enterprise Solutions:** IBM, EMC.
