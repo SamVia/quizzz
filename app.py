@@ -496,7 +496,7 @@ def gestisci_click(risposta_cliccata):
 
 def track_wrong_answer():
     """Traccia una risposta sbagliata aggiungendola alla lista."""
-    if st.session_state.selezione_utente != corretta:
+    if str(st.session_state.selezione_utente).strip().lower() != str(corretta).strip().lower():
         # Aggiungi solo se non è già stato tracciato per questa domanda
         current_q_index = st.session_state.idx - 1
         if current_q_index not in [item.get('original_index', -1) for item in st.session_state.wrong_answers]:
@@ -509,7 +509,7 @@ def track_wrong_answer():
 
 def remove_correct_from_wrong_list():
     """Rimuove una domanda dalla lista di risposte sbagliate se risposta correttamente."""
-    if st.session_state.selezione_utente == corretta and st.session_state.practice_mode:
+    if (str(st.session_state.selezione_utente).strip().lower() == str(corretta).strip().lower() and st.session_state.practice_mode):        
         # Trova e rimuovi la domanda corrente dalla lista di risposte sbagliate
         current_q = st.session_state.domanda_corrente.to_dict()
         st.session_state.wrong_answers = [
@@ -775,7 +775,11 @@ if (
     and st.session_state.fase == 'verificato'
     and not st.session_state.risposta_gia_valutata
 ):
-    if st.session_state.selezione_utente == corretta:
+
+    sel = str(st.session_state.selezione_utente).strip().lower()
+    corr = str(corretta).strip().lower()
+
+    if sel == corr:
         st.session_state.punteggio += 1
     else:
         st.session_state.punteggio -= 0.33
