@@ -295,12 +295,21 @@ def is_markdown_file(item):
     return False
 
 # --- 4. CARICAMENTO DATI ---
-
 if is_markdown_file(file_selezionato):
     markdown_content = load_markdown(file_selezionato)
     
-    # Uniamo Scroll to Top, Progress Bar e Cleanup in un unico script.
-    # L'f-string garantisce che Streamlit ricarichi lo script al cambio file.
+    # 1. AGGIUNGI L'UI DEL PROGRESSO NELLA SIDEBAR
+    st.sidebar.markdown("---")
+    st.sidebar.markdown(
+        """
+        <div style="padding: 5px 0;">
+            <div id="sidebar-scroll-text" style="text-align: center; font-size: 13px; font-weight: bold; margin-top: 4px;">0.00 %</div>
+        </div>
+        """, 
+        unsafe_allow_html=True
+    )
+
+    # 2. SCRIPT JAVASCRIPT AGGIORNATO
     js_code = f"""
     <script>
         // ID univoco per forzare il re-render: {scelta_utente}
@@ -321,7 +330,7 @@ if is_markdown_file(file_selezionato):
             doc.removeEventListener('scroll', window.parent._scrollListener, true);
         }}
 
-        // 3. CREAZIONE NUOVA PROGRESS BAR
+        // 3. CREAZIONE NUOVA PROGRESS BAR TOP
         const container = doc.createElement('div');
         container.id = 'reading-progress-container';
         container.style.position = 'fixed';
@@ -336,34 +345,52 @@ if is_markdown_file(file_selezionato):
         bar.id = 'reading-progress-bar';
         bar.style.height = '100%';
         bar.style.width = '0%';
-        bar.style.backgroundColor = '#FF4B4B'; // Rosso Streamlit
+        bar.style.backgroundColor = '#FF4B4B'; 
         bar.style.transition = 'width 0.1s ease';
         bar.style.borderRadius = '0 2px 2px 0';
         
         container.appendChild(bar);
         doc.body.appendChild(container);
         
-        // 4. FUNZIONE DI AGGIORNAMENTO SCROLL
+        // 4. FUNZIONE DI AGGIORNAMENTO SCROLL (Modificata per la sidebar)
         window.parent._scrollListener = () => {{
             const scrollElement = doc.querySelector('.stMain') || doc.documentElement;
             const scrollTop = scrollElement.scrollTop || doc.body.scrollTop;
             const scrollHeight = scrollElement.scrollHeight || doc.body.scrollHeight;
             const clientHeight = scrollElement.clientHeight || doc.documentElement.clientHeight;
             
+            const sidebarText = doc.getElementById('sidebar-scroll-text');
+            const sidebarBar = doc.getElementById('sidebar-scroll-bar');
+            
             const height = scrollHeight - clientHeight;
+            let percentage = 0;
+            
             if (height > 0) {{
-                const scrolled = (scrollTop / height) * 100;
-                bar.style.width = scrolled + '%';
+                percentage = (scrollTop / height) * 100;
+                // Previeni valori oltre il 100% o sotto lo 0% a causa del rimbalzo dello scroll (overscroll)
+                percentage = Math.min(Math.max(percentage, 0), 100); 
             }} else {{
-                bar.style.width = '100%';
+                percentage = 100;
             }}
+            
+            const widthStr = percentage + '%';
+            const textStr = percentage.toFixed(2) + ' %';
+            
+            // Aggiorna UI Superiore
+            bar.style.width = widthStr;
+            
+            // Aggiorna UI Sidebar
+            if (sidebarText) sidebarText.innerText = textStr;
+            if (sidebarBar) sidebarBar.style.width = widthStr;
         }};
+        
+        // Esegui subito per inizializzare i valori se la pagina è corta
+        window.parent._scrollListener();
         
         // Attacchiamo l'evento
         doc.addEventListener('scroll', window.parent._scrollListener, true);
 
-        // 5. CLEANUP QUANDO SI CAMBIA PAGINA O SEZIONE (es. passando ai Quiz)
-        // Quando Streamlit distrugge questo iframe, rimuoviamo la barra e il listener.
+        // 5. CLEANUP QUANDO SI CAMBIA PAGINA O SEZIONE
         window.addEventListener('unload', () => {{
             if (container && container.parentNode) {{
                 container.parentNode.removeChild(container);
@@ -376,7 +403,6 @@ if is_markdown_file(file_selezionato):
     </script>
     """
     
-    # Eseguiamo il blocco unificato
     components.html(js_code, height=0, width=0)
     
     st.title(scelta_utente)
@@ -384,6 +410,8 @@ if is_markdown_file(file_selezionato):
     st.markdown(markdown_content)
     
     st.stop()
+
+
 @st.cache_data
 def load_data(filename):
     """
