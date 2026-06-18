@@ -408,7 +408,6 @@ if is_markdown_file(file_selezionato):
     st.title(scelta_utente)
     st.write("---")
     st.markdown(markdown_content)
-    
     st.stop()
 
 
@@ -710,15 +709,17 @@ def render_button_with_feedback(option_text, key, col):
                 )
 
 # Rendering griglia
+q_idx = st.session_state.idx 
+
 if ha_opzioneD:
-    render_button_with_feedback(opts[0], "b0", c1)
-    render_button_with_feedback(opts[1], "b1", c2)
-    render_button_with_feedback(opts[2], "b2", c1)
-    render_button_with_feedback(opts[3], "b3", c2)
+    render_button_with_feedback(opts[0], f"b0_{q_idx}", c1)
+    render_button_with_feedback(opts[1], f"b1_{q_idx}", c2)
+    render_button_with_feedback(opts[2], f"b2_{q_idx}", c1)
+    render_button_with_feedback(opts[3], f"b3_{q_idx}", c2)
 else:
-    render_button_with_feedback(opts[0], "b0", st)
-    render_button_with_feedback(opts[1], "b1", st)
-    render_button_with_feedback(opts[2], "b2", st)
+    render_button_with_feedback(opts[0], f"b0_{q_idx}", st)
+    render_button_with_feedback(opts[1], f"b1_{q_idx}", st)
+    render_button_with_feedback(opts[2], f"b2_{q_idx}", st)
 
 st.write("---")
 
