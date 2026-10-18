@@ -3,7 +3,6 @@ import pandas as pd
 import random
 import os
 import re
-import streamlit.components.v1 as components # <--- AGGIUNGI QUESTO
 # --- CONFIGURAZIONE ---
 st.set_page_config(page_title="Dynamic Quiz Loader", page_icon="🚽", layout="wide")
 
@@ -120,6 +119,10 @@ if 'wrong_count' not in st.session_state:
     st.session_state.wrong_count = 0
 if 'answer_already_counted' not in st.session_state:
     st.session_state.answer_already_counted = False
+if 'html_view_state' not in st.session_state:
+    st.session_state.html_view_state = 'input'
+if 'html_content' not in st.session_state:
+    st.session_state.html_content = ""
 
 def reset_quiz_state():
     """Resetta completamente lo stato quando si cambia quiz."""
@@ -133,6 +136,8 @@ def reset_quiz_state():
         st.session_state.domande_risposte_totali = 0
     st.session_state.correct_count = 0
     st.session_state.wrong_count = 0
+    st.session_state.html_view_state = 'input'
+    st.session_state.html_content = ""
 
 def reset_wrong_answers():
     """Resetta la lista delle risposte sbagliate."""
@@ -185,10 +190,6 @@ if uploaded_file is not None:
 
 st.sidebar.markdown("---")
 
-if not quiz_map and not cheatsheet_map and readme_item is None:
-    st.error("Nessun file CSV o MD trovato nella cartella!")
-    st.stop()
-
 section_options = []
 if readme_item is not None:
     section_options.append("Home")
@@ -196,6 +197,7 @@ if quiz_map:
     section_options.append("Quiz")
 if cheatsheet_map:
     section_options.append("Cheatsheets")
+section_options.append("Visualizzatore HTML")
 
 selected_section = st.sidebar.radio(
     "Seleziona sezione:",
@@ -210,6 +212,60 @@ file_selezionato = None
 if selected_section == "Home":
     scelta_utente = "Home"
     file_selezionato = readme_item
+elif selected_section == "Visualizzatore HTML":
+    if st.session_state.html_view_state == 'input':
+        st.title("🌐 Visualizzatore HTML Interattivo")
+        st.write("Carica un file `.html` o incolla il codice qui sotto. I form e il JavaScript funzioneranno regolarmente.")
+
+        uploaded_html = st.file_uploader("1. Carica un file .html", type=["html"])
+        st.markdown("### OPPURE")
+        pasted_html = st.text_area("2. Incolla il codice HTML", height=300)
+
+        if st.button("Visualizza Rendering", type="primary"):
+            if uploaded_html is not None:
+                raw_html = uploaded_html.getvalue()
+                try:
+                    st.session_state.html_content = raw_html.decode("utf-8")
+                except UnicodeDecodeError:
+                    st.session_state.html_content = raw_html.decode("latin-1")
+                st.session_state.html_view_state = 'view'
+                st.rerun()
+            elif pasted_html.strip():
+                st.session_state.html_content = pasted_html
+                st.session_state.html_view_state = 'view'
+                st.rerun()
+            else:
+                st.warning("Per favore, carica un file o incolla del codice HTML prima di procedere.")
+    elif st.session_state.html_view_state == 'view':
+        col1, col2 = st.columns([1, 8])
+        with col1:
+            st.markdown("<div style='margin-left: 20px;'>", unsafe_allow_html=True)
+            if st.button("← Indietro"):
+                st.session_state.html_view_state = 'input'
+                st.session_state.html_content = ""
+                st.rerun()
+            st.markdown("</div>", unsafe_allow_html=True)
+            
+        with col2:
+            st.markdown("<h3 style='margin-top: -10px;'>Anteprima Documento</h3>", unsafe_allow_html=True)
+            
+        # 1. Encode the HTML to base64 to avoid quote-escaping issues
+        import base64
+        b64_html = base64.b64encode(st.session_state.html_content.encode('utf-8')).decode('utf-8')
+        
+        # 2. Inject a native iframe with a massive height using st.markdown
+        iframe_code = f"""
+        <iframe 
+            src="data:text/html;base64,{b64_html}" 
+            width="100%" 
+            height="1500px" 
+            style="border: none; background: white; border-radius: 8px;">
+        </iframe>
+        """
+        st.markdown(iframe_code, unsafe_allow_html=True)
+
+    st.stop()
+    
 elif selected_section == "Quiz":
     scelta_utente = st.sidebar.radio(
         "Quiz disponibili:",
@@ -218,7 +274,7 @@ elif selected_section == "Quiz":
         key="quiz_selection"
     )
     file_selezionato = quiz_map[scelta_utente]
-else:
+elif selected_section == "Cheatsheets":
     cheatsheet_categories = build_cheatsheet_categories(cheatsheet_map)
     category_options = list(cheatsheet_categories.keys())
     selected_category = st.sidebar.selectbox(
@@ -403,7 +459,7 @@ if is_markdown_file(file_selezionato):
     </script>
     """
     
-    components.html(js_code, height=0, width=0)
+    st.markdown(js_code, unsafe_allow_html=True)
     
     st.title(scelta_utente)
     st.write("---")
